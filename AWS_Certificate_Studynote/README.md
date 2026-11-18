@@ -1,7 +1,7 @@
 
 # AWS CLF-C02 Study Notes
 
-[PAGE URL](d1yafwlyk0bqb2.cloudfront.net)
+[PAGE URL](https://d1yafwlyk0bqb2.cloudfront.net)
 
 AWS Certified Cloud Practitioner(CLF-C02) 자격증 시험을 준비하며 학습한 내용을 정리한 웹 기반 스터디 노트입니다.
 
