@@ -207,6 +207,7 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 | Amazon S3 | 정적 웹 사이트 파일 저장 및 호스팅 |
 | Amazon CloudFront | 콘텐츠 전송 및 캐싱을 통한 웹 사이트 배포 |
 
+
 ---
 
 ## 5. AWS Deployment
@@ -214,17 +215,19 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 프로젝트를 로컬 환경에서만 확인하는 것이 아니라, AWS 서비스를 활용하여 실제 웹 브라우저에서 접근할 수 있도록 배포했습니다.
 
 ### Amazon S3
-
 - 정적 웹 사이트 파일 저장
 - HTML, CSS, JavaScript 파일 관리
 - CloudFront의 Origin으로 활용
+- Block Public Access를 활성화하여
+  S3 객체에 대한 직접적인 퍼블릭 접근 차단
+- Bucket Policy를 통해 CloudFront OAC의 접근만 허용
 
 ### Amazon CloudFront
-
 - S3 버킷을 Origin으로 설정
-- CloudFront 배포를 통해 웹 콘텐츠 제공
-- 캐싱을 활용하여 콘텐츠 전달
-- 파일 수정 후 캐시 무효화를 통해 변경 사항 반영
+- Origin Access Control(OAC)을 적용하여 CloudFront를 통한 안전한 S3 접근 구성
+- 캐시 정책의 Minimum TTL, Default TTL, Maximum TTL 설정
+- 캐싱을 활용한 콘텐츠 전달
+- 파일 수정 후 Invalidation을 통한 캐시 갱신
 
 ### Deployment Process
 
