@@ -1,0 +1,3539 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLF-C02 스터디 노트 | AWS Certified Cloud Practitioner 시험 대비</title>
+<meta name="description" content="AWS Certified Cloud Practitioner(CLF-C02) 시험 대비 학습 노트. AWS 글로벌 인프라, IAM 등 수업에서 배운 내용을 정리합니다.">
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+>
+<style>
+:root {
+  --orange: #ff9900;
+  --orange-deep: #ec7211;
+  --ink: #232f3e;
+  --ink-soft: #44546a;
+  --paper: #ffffff;
+  --tint: #fff4e0;
+  --mist: #f3f6f9;
+  --line: #d9e0e7;
+  --link: #0b5fb3;
+  --d1: #232f3e;
+  --d2: #ec7211;
+  --d3: #0972d3;
+  --d4: #7d8998;
+}
+* { box-sizing: border-box; }
+html { color-scheme: light; scroll-padding-top: 16px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Segoe UI", sans-serif;
+  font-size: 17px; line-height: 1.75;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+a { color: var(--link); text-underline-offset: 3px; }
+a:focus-visible { outline: 3px solid var(--orange-deep); outline-offset: 3px; border-radius: 2px; }
+code { background: var(--mist); padding: 1px 6px; border-radius: 3px; font-size: 0.92em; overflow-wrap: anywhere; }
+
+.hero { background: var(--orange); padding: 56px 24px 52px; }
+.hero-in, .exam, .layout, footer { max-width: 1040px; margin: 0 auto; }
+.hero .cert { margin: 0 0 8px; font-weight: 700; font-size: 1.05rem; }
+.hero h1 { margin: 0 0 14px; font-size: clamp(2.3rem, 7vw, 3.8rem); line-height: 1.1; letter-spacing: -0.02em; font-weight: 800; }
+.hero .lead { margin: 0; max-width: 46em; font-size: 1.1rem; }
+
+.exam { padding: 32px 24px 8px; }
+.exam h2 { margin: 0 0 4px; font-size: 1.1rem; }
+.exam p { margin: 0 0 14px; color: var(--ink-soft); font-size: 0.95rem; }
+.bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; gap: 2px; }
+.bar span:nth-child(1) { width: 24%; background: var(--ink); }
+.bar span:nth-child(2) { width: 30%; background: var(--orange-deep); }
+.bar span:nth-child(3) { width: 34%; background: #0972d3; }
+.bar span:nth-child(4) { width: 12%; background: #7d8998; }
+.legend { list-style: none; margin: 12px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 16px; font-size: 0.93rem; }
+.legend li { padding-left: 18px; position: relative; line-height: 1.5; }
+.legend li::before { content: ""; position: absolute; left: 0; top: 0.35em; width: 11px; height: 11px; border-radius: 3px; background: var(--c); }
+
+.layout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 48px;
+  padding: 40px 24px 64px;
+}
+
+.sidebar {
+  min-width: 0;
+}
+.sidebar nav h2 { margin: 18px 0 6px; font-size: 0.95rem; }
+.sidebar nav h2:first-child { margin-top: 0; }
+.sidebar nav ul { list-style: none; margin: 0; padding: 0; }
+.sidebar nav a { display: block; padding: 4px 0 4px 12px; border-left: 3px solid var(--line); color: var(--ink); text-decoration: none; }
+.sidebar nav a:hover { background: var(--tint); }
+.sidebar nav a:not([class]):hover { border-left-color: var(--orange); }
+.sidebar nav a.d1 { border-left-color: var(--d1); }
+.sidebar nav a.d2 { border-left-color: var(--d2); }
+.sidebar nav a.d3 { border-left-color: var(--d3); }
+.sidebar nav a.d4 { border-left-color: var(--d4); }
+.sidebar nav a.adv { border-left-style: dashed; border-left-color: var(--ink-soft); }
+.nav-adv { display: inline-block; margin-left: 6px; padding: 0 7px; border: 1px dashed var(--ink-soft); border-radius: 999px; background: var(--mist); font-size: 0.75rem; line-height: 1.5; vertical-align: 1px; }
+
+main section { padding: 8px 0 32px; }
+main section + section { border-top: 2px solid var(--ink); padding-top: 28px; }
+h2.t { margin: 0 0 8px; font-size: 1.6rem; line-height: 1.3; letter-spacing: -0.01em; }
+.group { margin: 40px 0 0; padding: 10px 16px; background: var(--ink); color: #fff; font-size: 1.05rem; font-weight: 700; border-left: 8px solid var(--orange); }
+.group:first-child { margin-top: 0; }
+.tag { display: inline-block; margin: 0 0 14px; padding: 1px 10px; border: 1.5px solid var(--orange); background: var(--tint); border-radius: 999px; font-size: 0.85rem; }
+p { margin: 0 0 12px; max-width: 40em; }
+ul.pts { margin: 0 0 14px; padding-left: 1.25em; max-width: 46em; }
+ul.pts li { margin-bottom: 6px; }
+dl.def { margin: 0 0 14px; max-width: 46em; }
+dl.def dt { font-weight: 700; margin-top: 12px; }
+dl.def dd { margin: 2px 0 0; }
+.note { margin: 18px 0; padding: 14px 18px; background: var(--tint); border-left: 5px solid var(--orange); max-width: 46em; }
+.note h3 { margin: 0 0 6px; font-size: 1rem; }
+.note ul { margin: 0; padding-left: 1.2em; }
+.note li { margin-bottom: 4px; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 46em; }
+.cols h3 { margin: 0 0 6px; font-size: 1.05rem; }
+
+.tag.d1 { border-color: var(--d1); background: #e8ecf1; }
+.tag.d2 { border-color: var(--d2); background: #fdeee0; }
+.tag.d3 { border-color: var(--d3); background: #e3f0fc; }
+.tag.d4 { border-color: var(--d4); background: #eceff2; }
+.tag.d1::before, .tag.d2::before, .tag.d3::before, .tag.d4::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 7px; border-radius: 50%; }
+.tag.d1::before { background: var(--d1); }
+.tag.d2::before { background: var(--d2); }
+.tag.d3::before { background: var(--d3); }
+.tag.d4::before { background: var(--d4); }
+.tag.adv { border-style: dashed; background: var(--mist); border-color: var(--ink-soft); }
+dd ul { margin: 6px 0 0; padding-left: 1.2em; }
+dd li { margin-bottom: 3px; }
+h3.s { margin: 18px 0 6px; font-size: 1.05rem; }
+pre { margin: 0 0 14px; padding: 14px 16px; max-width: 46em; background: var(--mist); border-radius: 6px; overflow-x: auto; font-size: 0.9rem; line-height: 1.6; white-space: pre; word-break: normal; }
+pre code { background: none; padding: 0; overflow-wrap: normal; }
+ol.pts { margin: 0 0 14px; padding-left: 1.5em; max-width: 46em; }
+ol.pts li { margin-bottom: 6px; }
+ul.pts ul, ul.pts ol, ol.pts ul, ol.pts ol { margin: 6px 0; padding-left: 1.2em; }
+ul.pts ul li, ul.pts ol li, ol.pts ul li, ol.pts ol li { margin-bottom: 4px; }
+.tbl { max-width: 46em; margin: 0 0 16px; overflow-x: auto; }
+.tbl table { border-collapse: collapse; width: 100%; font-size: 0.95rem; line-height: 1.55; }
+.tbl caption { text-align: left; font-weight: 700; padding: 0 0 6px; }
+.tbl th, .tbl td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }
+.tbl thead th { background: var(--ink); color: #fff; }
+.tbl tbody th { background: var(--mist); font-weight: 700; }
+.flow { max-width: 46em; margin: 0 0 14px; padding: 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); }
+.flow .top { text-align: center; }
+.flow .arr { color: var(--ink-soft); line-height: 1.3; }
+.flow .box { display: inline-block; padding: 5px 12px; border: 1.5px solid var(--ink-soft); border-radius: 6px; background: var(--mist); font-size: 0.92rem; line-height: 1.4; text-align: center; }
+.flow .box.key { background: var(--tint); border-color: var(--orange); font-weight: 700; }
+.flow .cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.flow .col { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+footer { padding: 24px 24px 56px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 0.9rem; line-height: 1.65; }
+footer p { margin: 0 0 6px; max-width: 60em; }
+.ln { display: block; }
+
+@media (max-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-top: 28px;
+  }
+
+  .layout.sidebar-collapsed {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .sidebar nav {
+    position: static;
+    max-height: 50vh;
+    background: var(--mist);
+    padding: 14px 16px;
+    border-radius: 6px;
+  }
+
+  .legend {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cols {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .flow .cols3 { grid-template-columns: 1fr; }
+  .flow .col + .col { padding-top: 10px; border-top: 1px dashed var(--line); }
+}
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  .hero { padding: 40px 18px 36px; }
+  .exam, .layout, footer { padding-left: 18px; padding-right: 18px; }
+}
+/* 검색 기능 */
+.search-container {
+    margin-bottom: 32px;
+}
+
+#site-search {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+}
+
+#site-search:focus {
+    border-color: var(--orange-deep);
+    box-shadow: 0 0 0 3px var(--tint);
+}
+
+.search-count {
+    margin: 14px 0 8px;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+}
+
+.search-result {
+    display: block;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.search-result:hover {
+    background: var(--tint);
+    border-color: var(--orange);
+}
+
+.search-result strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.search-result p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+}
+
+.search-empty {
+    padding: 12px;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+}
+.search-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 16px;
+  background: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-box:focus-within {
+  border-color: var(--orange-deep);
+  box-shadow: 0 0 0 3px var(--tint);
+}
+
+#site-search {
+  flex: 1;
+  width: 100%;
+  padding: 14px 0;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: inherit;
+  background: transparent;
+}
+
+.search-icon {
+  display: flex;
+  align-items: center;
+  color: var(--orange-deep);
+  font-size: 1.1rem;
+}
+/* 사이드바 기본 구조 */
+.layout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 48px;
+  padding: 40px 24px 64px;
+}
+
+.sidebar {
+  min-width: 0;
+}
+
+.sidebar nav {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* 사이드바 접기 버튼 */
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 7px;
+  margin: 0 0 12px auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: white;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.sidebar-toggle:hover {
+  background: var(--tint);
+  border-color: var(--orange);
+}
+
+.sidebar-toggle svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 사이드바 접힌 상태 */
+.layout.sidebar-collapsed {
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.layout.sidebar-collapsed .sidebar nav {
+  display: none;
+}
+/* 태블릿 및 모바일 화면 */
+@media (max-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-top: 28px;
+  }
+
+  .layout.sidebar-collapsed {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .sidebar nav {
+    position: static;
+    max-height: 50vh;
+    background: var(--mist);
+    padding: 14px 16px;
+    border-radius: 6px;
+  }
+
+  .legend {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 작은 모바일 화면 */
+@media (max-width: 560px) {
+  .flow .cols3 {
+    grid-template-columns: 1fr;
+  }
+
+  .flow .col + .col {
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+  }
+}
+
+/* 매우 작은 모바일 화면 */
+@media (max-width: 480px) {
+  body {
+    font-size: 16px;
+  }
+
+  .hero {
+    padding: 40px 18px 36px;
+  }
+
+  .exam, .layout, footer {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
+
+/* ==============================
+   Home Dashboard
+============================== */
+
+/* Home 화면 전체 */
+#home-page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+/* 기존 main section 공통 스타일 초기화 */
+#home-page > section {
+  border-top: none;
+}
+
+/* Home 소개 영역 */
+#home-page .home-intro {
+  margin: 36px 0 12px;
+  padding: 32px 36px;
+  background: var(--mist);
+  border-left: 6px solid var(--orange);
+  border-radius: 8px;
+}
+
+.home-intro h2 {
+  margin: 0 0 12px;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+
+.home-intro p {
+  margin: 0;
+  max-width: 52em;
+  color: var(--ink-soft);
+  font-size: 1rem;
+}
+
+/* 시험 도메인 정보 */
+#home-page .exam {
+  padding: 32px 12px 28px;
+}
+
+#home-page .exam h2 {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+#home-page .exam p {
+  max-width: 55em;
+}
+
+#home-page .bar {
+  height: 16px;
+  border-radius: 8px;
+}
+
+#home-page .legend {
+  gap: 12px 18px;
+  font-size: 0.88rem;
+}
+
+/* 학습 영역 선택 */
+#home-page .domain-section {
+  padding: 28px 12px 32px;
+}
+
+.domain-section > h2 {
+  margin: 0 0 6px;
+  font-size: 1.5rem;
+}
+
+.domain-section > p {
+  margin-bottom: 22px;
+  color: var(--ink-soft);
+}
+
+/* Domain 카드 그리드 */
+.domain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* 개별 카드 */
+.domain-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 170px;
+  padding: 24px 26px;
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--ink);
+  border-radius: 9px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.domain-card:nth-child(1) {
+  border-top-color: var(--d1);
+}
+
+.domain-card:nth-child(2) {
+  border-top-color: var(--d2);
+}
+
+.domain-card:nth-child(3) {
+  border-top-color: var(--d3);
+}
+
+.domain-card:nth-child(4) {
+  border-top-color: var(--d4);
+}
+
+.domain-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(35, 47, 62, 0.1);
+  border-color: var(--orange);
+}
+
+.domain-card:focus-visible {
+  outline: 3px solid var(--orange-deep);
+  outline-offset: 4px;
+}
+
+/* 카드 내부 텍스트 */
+.domain-number {
+  margin-bottom: 12px;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.domain-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
+
+.domain-card p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* Advanced Topics 카드 */
+.domain-card.advanced-card {
+  grid-column: 1 / -1;
+  min-height: 145px;
+  border-top-color: var(--orange-deep);
+  background: var(--tint);
+}
+
+.advanced-card .domain-number {
+  color: var(--orange-deep);
+}
+
+.advanced-card:hover {
+  border-color: var(--orange-deep);
+}
+
+/* 태블릿 및 모바일 */
+@media (max-width: 800px) {
+  #home-page {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  #home-page .home-intro {
+    padding: 26px 24px;
+  }
+
+  #home-page .legend {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .domain-grid {
+    gap: 14px;
+  }
+
+  .domain-card {
+    padding: 20px;
+  }
+}
+
+/* 작은 모바일 */
+@media (max-width: 560px) {
+  .domain-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .domain-card.advanced-card {
+    grid-column: auto;
+  }
+
+  .domain-card {
+    min-height: 145px;
+  }
+
+  #home-page .home-intro {
+    margin-top: 24px;
+    padding: 24px 20px;
+  }
+
+  #home-page .exam,
+  #home-page .domain-section {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}
+/* ==============================
+   Page Navigation
+============================== */
+
+/* hidden 속성이 CSS에 의해 무시되지 않도록 설정 */
+#home-page[hidden],
+#study-page[hidden] {
+  display: none !important;
+}
+
+/* Study 화면 상단 Home 버튼 영역 */
+.study-topbar {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 20px 24px 0;
+}
+
+/* Home으로 돌아가기 버튼 */
+#home-return {
+  padding: 9px 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+#home-return:hover {
+  background: var(--mist);
+  border-color: var(--orange);
+}
+
+#home-return:focus-visible {
+  outline: 3px solid var(--orange-deep);
+  outline-offset: 3px;
+}
+
+@media (max-width: 560px) {
+  .study-topbar {
+    padding: 16px 18px 0;
+  }
+}
+</style>
+<script src="./js/search.js" defer></script>
+<script src="./js/ui.js" defer></script>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-in">
+    <p class="cert">AWS CERTIFICATION STUDY NOTES</p>
+    <h1>AWS Certificate Study Notes</h1>
+    <p class="lead">
+      <span class="ln">AWS 자격증 취득을 위한 학습 노트입니다.</span>
+      <span class="ln">CLF-C02 기초 개념부터 SAA-C03 심화 내용까지 정리합니다.</span>
+    </p>
+  </div>
+</header>
+
+<!-- Home 화면 -->
+<main id="home-page">
+
+  <section class="home-intro">
+    <h2>Welcome to AWS Certificate Study Notes</h2>
+    <p>
+      AWS의 주요 서비스와 클라우드 개념을 자격증 시험 범위에 맞춰 정리한 학습 공간입니다.
+      각 도메인을 선택하여 관련 개념과 심화 내용을 학습할 수 있습니다.
+    </p>
+  </section>
+
+  <!-- CLF-C02 시험 도메인 안내 -->
+  <section class="exam" aria-labelledby="exam-h">
+    <h2 id="exam-h">CLF-C02 시험은 4개 도메인으로 나뉩니다</h2>
+    <p>
+      아래 노트에는 해당 도메인을 표시했습니다. 비중은 각 도메인이 시험에서 차지하는 비율이고,
+      심화로 표시된 항목은 CLF-C02보다 높은 단계(SAA-C03)에서 주로 다루는 내용입니다.
+    </p>
+
+    <div class="bar" role="img" aria-label="도메인 비중: 클라우드 개념 - 24%, 보안 및 규정 준수 - 30%, 클라우드 기술 및 서비스 - 34%, 요금 및 지원 - 12%">
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <ul class="legend">
+      <li style="--c:#232f3e">도메인 1: 클라우드 개념 - 24%</li>
+      <li style="--c:#ec7211">도메인 2: 보안 및 규정 준수 - 30%</li>
+      <li style="--c:#0972d3">도메인 3: 클라우드 기술 및 서비스 - 34%</li>
+      <li style="--c:#7d8998">도메인 4: 요금 및 지원 - 12%</li>
+    </ul>
+  </section>
+
+  <!-- 학습 영역 선택 -->
+  <section class="domain-section">
+    <h2>학습 영역 선택</h2>
+    <p>학습하고 싶은 영역을 선택하세요.</p>
+
+    <div class="domain-grid">
+
+      <a href="#ha" class="domain-card" data-open-domain="1">
+        <span class="domain-number">DOMAIN 01</span>
+        <h3>클라우드 개념</h3>
+        <p>클라우드 컴퓨팅의 기본 개념과 주요 특징</p>
+      </a>
+
+      <a href="#arn" class="domain-card" data-open-domain="2">
+        <span class="domain-number">DOMAIN 02</span>
+        <h3>보안 및 규정 준수</h3>
+        <p>IAM, 보안 정책, AWS Organizations</p>
+      </a>
+
+      <a href="#region" class="domain-card" data-open-domain="3">
+        <span class="domain-number">DOMAIN 03</span>
+        <h3>클라우드 기술 및 서비스</h3>
+        <p>AWS 글로벌 인프라, 컴퓨팅, 네트워킹</p>
+      </a>
+
+      <a href="#ec2-pricing" class="domain-card" data-open-domain="4">
+        <span class="domain-number">DOMAIN 04</span>
+        <h3>요금 및 지원</h3>
+        <p>AWS 요금 체계와 비용 관리</p>
+      </a>
+
+      <a href="#region-adv" class="domain-card advanced-card" data-open-advanced>
+        <span class="domain-number">ADVANCED TOPICS</span>
+        <h3>심화 학습</h3>
+        <p>SAA-C03 수준의 추가 개념과 아키텍처 학습</p>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+<!-- Home 화면 끝 -->
+
+<!-- 학습 화면 -->
+<div id="study-page" hidden>
+
+<div class="study-topbar">
+    <button type="button" id="home-return">
+        ← Home
+    </button>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+
+    <button
+      type="button"
+      id="sidebar-toggle"
+      class="sidebar-toggle"
+      aria-expanded="true"
+      aria-controls="sidebar-nav"
+      aria-label="목차 접기"
+      title="목차 접기"
+    >
+      <svg id="sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15 5 8 12l7 7 M21 5l-7 7 7 7"></path>
+      </svg>
+    </button>
+
+    <nav id="sidebar-nav" aria-label="노트 목차">
+    <h2>AWS 글로벌 인프라</h2>
+    <ul>
+      <li><a href="#region" class="d3">리전 선택 고려 사항</a></li>
+      <li><a href="#az" class="d3">가용 영역(AZ)</a></li>
+      <li><a href="#edge" class="d3">Edge Location</a></li>
+      <li><a href="#global" class="d3">글로벌 서비스와 리전 서비스</a></li>
+      <li><a href="#infra-services" class="d3">인프라 확장·엣지 서비스 개요</a></li>
+      <li><a href="#region-adv" class="adv">Region/AZ 심화<span class="nav-adv">심화</span></a></li>
+      <li><a href="#outposts-adv" class="adv">Outposts 심화<span class="nav-adv">심화</span></a></li>
+      <li><a href="#zones-adv" class="adv">Local Zones, Wavelength 심화<span class="nav-adv">심화</span></a></li>
+      <li><a href="#cloudfront-adv" class="adv">CloudFront, Global Accelerator 심화<span class="nav-adv">심화</span></a></li>
+    </ul>
+    <h2>보안과 IAM</h2>
+    <ul>
+      <li><a href="#arn" class="d2">ARN</a></li>
+      <li><a href="#root" class="d2">루트 유저</a></li>
+      <li><a href="#iam-user" class="d2">IAM User</a></li>
+      <li><a href="#iam" class="d2">IAM 소개</a></li>
+      <li><a href="#iam-parts" class="d2">IAM 구성</a></li>
+      <li><a href="#policy" class="d2">IAM Policy와 동작 원리</a></li>
+      <li><a href="#boundary" class="adv">Permissions Boundary<span class="nav-adv">심화</span></a></li>
+      <li><a href="#iam-compare" class="adv">Boundary, SCP, Resource-based Policy<span class="nav-adv">심화</span></a></li>
+    </ul>
+    <h2>Amazon EC2</h2>
+    <ul>
+      <li><a href="#ec2" class="d3">EC2 개요</a></li>
+      <li><a href="#ec2-pricing" class="d4">인스턴스 구매 옵션</a></li>
+      <li><a href="#savings" class="d4">Savings Plans</a></li>
+      <li><a href="#ec2-storage" class="d3">스토리지: EBS와 인스턴스 스토어</a></li>
+      <li><a href="#snapshot" class="d3">Snapshot</a></li>
+      <li><a href="#ebs-delete" class="adv">Terminate 시 EBS 삭제 여부<span class="nav-adv">심화</span></a></li>
+      <li><a href="#lifecycle" class="d3">인스턴스 수명 주기</a></li>
+      <li><a href="#actions" class="d3">Stop, Reboot, Terminate, Hibernate</a></li>
+      <li><a href="#placement" class="adv">배치 그룹<span class="nav-adv">심화</span></a></li>
+      <li><a href="#eni" class="adv">ENI, ENA, EFA<span class="nav-adv">심화</span></a></li>
+      <li><a href="#jumbo" class="adv">Jumbo Frame<span class="nav-adv">심화</span></a></li>
+      <li><a href="#ip" class="d3">Public, Private, Elastic IP</a></li>
+      <li><a href="#subnet" class="d3">Public Subnet과 Private Subnet</a></li>
+      <li><a href="#bastion" class="adv">Bastion Host와 SSM<span class="nav-adv">심화</span></a></li>
+    </ul>
+    <h2>VPC 네트워킹: NAT와 VPC Endpoint</h2>
+    <ul>
+      <li><a href="#nat" class="d3">NAT Gateway 개념</a></li>
+      <li><a href="#nat-ha" class="adv">NAT 고가용성, Regional<span class="nav-adv">심화</span></a></li>
+      <li><a href="#nat-instance" class="adv">NAT Gateway vs NAT Instance<span class="nav-adv">심화</span></a></li>
+      <li><a href="#vpc-endpoint" class="adv">NAT Gateway vs VPC Endpoint<span class="nav-adv">심화</span></a></li>
+      <li><a href="#private-nat" class="adv">Private NAT Gateway<span class="nav-adv">심화</span></a></li>
+      <li><a href="#nat-summary" class="adv">핵심 요약<span class="nav-adv">심화</span></a></li>
+    </ul>
+    <h2>ELB와 Auto Scaling</h2>
+    <ul>
+      <li><a href="#scale" class="d3">Scale Up과 Scale Out</a></li>
+      <li><a href="#stateless" class="adv">Stateless와 Stateful<span class="nav-adv">심화</span></a></li>
+      <li><a href="#asg" class="d3">Auto Scaling 기본 구조</a></li>
+      <li><a href="#asg-health" class="adv">Health Checks, Grace Period<span class="nav-adv">심화</span></a></li>
+      <li><a href="#asg-policy" class="adv">Auto Scaling 유형, Policy<span class="nav-adv">심화</span></a></li>
+      <li><a href="#asg-concepts" class="adv">Auto Scaling 관련 개념<span class="nav-adv">심화</span></a></li>
+      <li><a href="#ha" class="d1">고가용성, 내결함성, 내구성</a></li>
+      <li><a href="#elb" class="d3">ELB와 로드 밸런서 종류</a></li>
+      <li><a href="#lb-detail" class="adv">ALB, NLB, GWLB 자세히<span class="nav-adv">심화</span></a></li>
+      <li><a href="#xff" class="adv">XFF 헤더<span class="nav-adv">심화</span></a></li>
+      <li><a href="#cross-zone" class="adv">Cross-Zone Load Balancing<span class="nav-adv">심화</span></a></li>
+      <li><a href="#session" class="adv">Session State, Sticky Session<span class="nav-adv">심화</span></a></li>
+      <li><a href="#tls" class="adv">SSL/TLS Termination<span class="nav-adv">심화</span></a></li>
+    </ul>
+    <h2>AWS Organizations 기초</h2>
+    <ul>
+      <li><a href="#org-basic" class="d2">Organizations 개념과 구성 요소</a></li>
+      <li><a href="#org-billing" class="d4">Consolidated Billing</a></li>
+      <li><a href="#org-scp-basic" class="d2">SCP 기초</a></li>
+    </ul>
+    <h2>다중 계정: Organizations와 Control Tower</h2>
+    <ul>
+      <li><a href="#org" class="adv">Organizations 구조<span class="nav-adv">심화</span></a></li>
+      <li><a href="#org-api" class="adv">Organizations API<span class="nav-adv">심화</span></a></li>
+      <li><a href="#scp" class="adv">SCP와 상속<span class="nav-adv">심화</span></a></li>
+      <li><a href="#iam-scp" class="adv">IAM Policy vs Boundary vs SCP<span class="nav-adv">심화</span></a></li>
+      <li><a href="#ct" class="adv">Control Tower와 Landing Zone<span class="nav-adv">심화</span></a></li>
+      <li><a href="#ct-controls" class="adv">Controls(Guardrails)<span class="nav-adv">심화</span></a></li>
+      <li><a href="#ct-factory" class="adv">Account Factory<span class="nav-adv">심화</span></a></li>
+    </ul>
+    </nav>
+
+  </div>  
+
+  <main>
+    <!-- 검색 기능 -->
+    <div class="search-container">
+      <h2 class="search-title">검색</h2>
+
+      <div class="search-box">
+        <input
+          type="search"
+          id="site-search"
+          placeholder="AWS 개념이나 서비스를 검색하세요."
+          aria-label="학습 노트 검색"
+        >
+        <span class="search-icon">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+      </div>
+
+      <div id="search-results" aria-live="polite"></div>
+    </div>
+
+    <p class="group">AWS 글로벌 인프라</p>
+
+    <section 
+      id="region"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">리전 선택 고려 사항</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+      <p>리전을 고를 때는 아래 네 가지를 비교합니다. AWS 공식 문서에서 제시한 고려 사항입니다.</p>
+      <dl class="def">
+        <dt>지연 시간</dt>
+        <dd>사용자와 거리가 멀면 지연 시간이 늘어날 수밖에 없으므로 근접성을 고려해야 합니다.</dd>
+        <dt>규정 준수</dt>
+        <dd>국가(리전)마다 데이터와 서비스 제공에 관한 법적 규제가 다릅니다. 업무가 해당 국가의 법률에 맞는지 확인한 뒤 리전을 골라야 합니다.</dd>
+        <dt>서비스 및 기능 가용성</dt>
+        <dd>리전마다 지원하는 서비스의 폭이 다를 수 있으므로, 필요한 서비스를 해당 리전이 지원하는지 확인해야 합니다.</dd>
+        <dt>비용</dt>
+        <dd>같은 서비스라도 리전마다 요금이 다를 수 있으므로 필요한 서비스의 리전별 요금을 비교해야 합니다.</dd>
+      </dl>
+    </section>
+
+    <section 
+      id="az"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">가용 영역(AZ/Availability Zone)</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+      <ul class="pts">
+        <li>리전의 하부 단위입니다. 하나의 리전은 최소 3개의 가용 영역으로 구성됩니다(AWS 자격 시험 기준, AWS 공식 문서).</li>
+        <li>예외로 미국 서부(캘리포니아)는 신규 계정이 AZ 2개에만 접근할 수 있습니다.</li>
+        <li>서비스는 여러 AZ에 나누어 배치하는 것을 권장합니다(고가용성 확보).</li>
+        <li>하나의 AZ에는 최소 1개의 데이터센터가 있습니다.</li>
+        <li>AZ 간에는 매우 빠른 저지연 네트워크로 연결되고, 리전 간에는 AWS 글로벌 네트워크로 연결됩니다.</li>
+        <li>재해가 나도 고가용성과 내구성을 유지하도록 AZ는 서로 일정 거리 이상 떨어져 있습니다. 다만 같은 리전 안이므로 모든 AZ는 서로 100km 이내에 있습니다. 이로써 여러 재해에 대비하고 안정성을 확보합니다.</li>
+      </ul>
+      <div class="note">
+        <h3>AZ 코드와 실제 위치</h3>
+        <ul>
+          <li>각 계정별로 AZ의 코드와 실제 위치는 다를 수 있습니다(2025년 11월 이전에 만든 계정, 가장 오래된 리전 기준).</li>
+          <li>예를 들어 계정 1의 AZ-A와 계정 2의 AZ-A는 같은 이름으로 표시되지만 실제 AZ는 다릅니다(랜덤 배정).</li>
+          <li>이유는 한 AZ로 트래픽이 몰리는 것을 막고 리소스를 AZ들에 고르게 분산하기 위해서입니다.</li>
+          <li>계정 간에 AZ를 맞출 때는 AZ ID(예: <code>use1-az1</code>)를 씁니다. AZ ID는 모든 계정에서 같은 물리적 위치를 가리킵니다.</li>
+          <li>2025년 11월부터 만든 계정은 같은 AZ가 같은 코드로 매핑됩니다.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section 
+      id="edge"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">Edge Location</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+      <ul class="pts">
+        <li>Amazon CloudFront(CDN, Content Delivery Network), AWS Global Accelerator 등 여러 서비스가 사용자와 가까운 곳에서 트래픽을 받아 빠르게 제공하기 위해 쓰는 거점입니다. 콘텐츠 캐싱은 CloudFront의 기능이고, Global Accelerator는 캐싱하지 않습니다.</li>
+        <li>전 세계 여러 장소에 흩어져 있습니다.</li>
+        <li>CloudFront에서는 사용자가 한 번 불러온 데이터를 엣지 로케이션에 캐싱해 두면, 두 번째 이후 요청은 초저지연으로 콘텐츠를 받을 수 있습니다. 캐싱이므로 콘텐츠를 영구 보관하지는 않습니다.</li>
+      </ul>
+    </section>
+
+    <section 
+      id="global"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">글로벌 서비스와 리전 서비스</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+      <div class="cols">
+        <div>
+          <h3>글로벌 서비스</h3>
+          <ul class="pts">
+            <li>Amazon CloudFront(CDN)</li>
+            <li>IAM(Identity and Access Management)</li>
+            <li>Amazon Route 53(DNS, Domain Name System)</li>
+            <li>AWS WAF(Web Application Firewall): Layer 7(애플리케이션 레이어) 보안 담당</li>
+          </ul>
+        </div>
+        <div>
+          <h3>리전 서비스</h3>
+          <ul class="pts">
+            <li>대부분의 서비스</li>
+          </ul>
+        </div>
+      </div>
+      <p>AWS WAF는 CloudFront에 사용할 때는 글로벌 범위(미국 동부(버지니아 북부) 리전에서 생성)이고, ALB나 API Gateway 같은 리전 리소스에 사용할 때는 해당 리전 범위입니다.</p>
+      <div class="note">
+        <h3>S3는 글로벌 서비스가 아닙니다</h3>
+        <ul>
+          <li>S3 버킷 이름은 전 세계에서 유일해야 해서 글로벌 서비스로 오해하기 쉽습니다. 하지만 S3에 저장되는 데이터는 리전에 한정되므로 글로벌 서비스라고 할 수 없습니다.</li>
+          <li>일반 용도 버킷은 기본적으로 글로벌 네임스페이스(이름이 모든 계정과 리전에서 고유해야 함)에 만들어집니다. 2026년 3월부터는 내 계정만 쓸 수 있는 계정 리전 네임스페이스(이름이 <code>-an</code>으로 끝남)도 선택할 수 있습니다.</li>
+          <li>계정 리전 네임스페이스를 쓰더라도 데이터는 선택한 리전에 저장됩니다. 기존 글로벌 버킷의 이름은 이 방식으로 바꿀 수 없습니다.</li>
+        </ul>
+      </div>
+    </section>
+    <section 
+      id="infra-services"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">인프라 확장·엣지 서비스 개요</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+      <p>AWS 리전만으로는 사용자나 온프레미스 시스템과의 거리 때문에 지연 시간이 생길 수 있습니다. 이를 줄이기 위한 서비스들을 용도별로 구분해 정리합니다.</p>
+      <div class="tbl"><table>
+        <caption>인프라 확장·엣지 서비스 비교</caption>
+        <thead><tr><th scope="col">서비스</th><th scope="col">개요</th><th scope="col">주요 용도</th><th scope="col">구분 포인트</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">AWS Outposts</th><td>AWS 인프라와 서비스를 고객의 온프레미스 환경으로 확장하는 서비스. AWS가 제공하는 하드웨어를 고객 데이터센터에 설치</td><td>낮은 지연 시간, 데이터 로컬 처리, 온프레미스 시스템과 가까운 곳에서 실행</td><td>내 데이터센터 안에 설치</td></tr>
+          <tr><th scope="row">AWS Local Zones</th><td>AWS 리전의 인프라를 대도시 같은 특정 지역으로 확장해, 사용자와 가까운 곳에서 컴퓨팅과 스토리지를 실행하는 서비스</td><td>실시간 게임, 영상 편집과 렌더링 등 지연 시간에 민감한 애플리케이션</td><td>사용자와 가까운 대도시 인근</td></tr>
+          <tr><th scope="row">AWS Wavelength</th><td>통신 사업자의 5G 네트워크 안에 AWS 컴퓨팅과 스토리지를 배치하는 서비스</td><td>5G 모바일 기기용 초저지연 서비스(클라우드 게임, 커넥티드 카, AR/VR 등)</td><td>통신사 5G 네트워크 안에 설치</td></tr>
+          <tr><th scope="row">Amazon CloudFront</th><td>전 세계 엣지 로케이션을 이용해 콘텐츠를 빠르게 전달하는 CDN(Content Delivery Network) 서비스</td><td>이미지, 동영상, 웹 콘텐츠 전송</td><td>콘텐츠를 <strong>캐싱</strong>함</td></tr>
+          <tr><th scope="row">AWS Global Accelerator</th><td>AWS 글로벌 네트워크를 통해 사용자의 트래픽을 가장 적절한 AWS 엔드포인트로 전달해 네트워크 성능을 높이는 서비스. 고정 IP(Anycast IP)를 제공</td><td>게임 서버, API 등 글로벌 애플리케이션</td><td>콘텐츠를 <strong>캐싱하지 않음</strong></td></tr>
+        </tbody>
+      </table></div>
+      <div class="note">
+        <h3>시험 포인트</h3>
+        <ul>
+          <li>AWS 인프라를 내 데이터센터(온프레미스)에서 실행하고 싶다 → Outposts</li>
+          <li>대도시 등 사용자 가까운 곳에서 지연 시간을 줄이고 싶다 → Local Zones</li>
+          <li>5G 모바일 기기에 초저지연 서비스를 제공하고 싶다 → Wavelength</li>
+          <li>전 세계 사용자에게 이미지와 동영상 같은 콘텐츠를 빠르게 제공하고 싶다 → CloudFront</li>
+          <li>캐싱 없이 글로벌 사용자의 트래픽을 가장 적절한 엔드포인트로 보내고 싶다 → Global Accelerator</li>
+          <li>Outposts, Local Zones, Wavelength는 독립된 Region이 아니라 AWS 리전과 연결되어 동작하는 확장 인프라입니다.</li>
+        </ul>
+      </div>
+    </section>
+    <section 
+      id="region-adv"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Region/AZ 심화</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <h3 class="s">Region 선택 시 추가 고려 사항</h3>
+      <ul class="pts">
+        <li>기본 네 가지(지연 시간, 규정 준수, 서비스 가용성, 비용) 외에 <strong>재해 복구 및 가용성 요구사항</strong>도 고려합니다.</li>
+        <li>특정 AWS 서비스가 원하는 Region에서 제공되지 않으면, 다른 Region을 선택하거나 해당 Region이 지원하는 대체 아키텍처를 고려해야 합니다.</li>
+      </ul>
+      <h3 class="s">AZ ID와 AZ Name의 차이</h3>
+      <ul class="pts">
+        <li>AZ Name: <code>ap-northeast-2a</code>처럼 표시되는 AZ 이름</li>
+        <li>AZ ID: <code>apne2-az1</code>처럼 표시되는 AZ의 고유 식별자</li>
+        <li>같은 AZ라도 AWS 계정마다 다른 Name으로 표기될 수 있지만, AZ ID는 계정 간에도 같은 물리적 AZ를 가리킵니다.</li>
+        <li>예: 두 계정에서 <code>ap-northeast-2a</code>라는 Name이 같아도 실제 물리적 AZ는 각각 <code>apne2-az1</code>, <code>apne2-az2</code>로 다를 수 있습니다.</li>
+        <li>AZ Name을 계정마다 다르게 표기하는 이유는 특정 AZ에 리소스가 몰리지 않고 고르게 분산되게 하기 위해서입니다.</li>
+        <li>위 내용은 2025년 11월 이전에 만든 계정 기준입니다(위 “AZ 코드와 실제 위치” 참고).</li>
+      </ul>
+      <h3 class="s">Multi-AZ와 Multi-Region은 해결하는 장애 범위가 다릅니다</h3>
+      <div class="tbl"><table>
+        <caption>Multi-AZ와 Multi-Region 비교</caption>
+        <thead><tr><th scope="col">구분</th><th scope="col">대응하는 장애 범위</th><th scope="col">연결 방식</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Multi-AZ</th><td>하나의 Region 안에서 AZ 규모로 발생하는 장애</td><td>Region 안의 사설 네트워크로 AZ 간 연결</td></tr>
+          <tr><th scope="row">Multi-Region</th><td>서로 다른 Region에 리소스를 배치해 Region 전체 규모의 장애에 대응</td><td>Region 간 연결</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+    <section 
+      id="outposts-adv"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">AWS Outposts 심화</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <p>기초 개요는 위 “인프라 확장·엣지 서비스 개요”를 참고하세요. 여기서는 구조와 동작 방식을 다룹니다.</p>
+      <h3 class="s">사용 이유</h3>
+      <ul class="pts">
+        <li><strong>낮은 지연 시간:</strong> 애플리케이션을 온프레미스 시스템과 가까운 곳에서 실행해 AWS Region까지 오가는 네트워크 지연을 줄입니다.</li>
+        <li><strong>데이터 로컬 처리:</strong> 데이터가 외부 AWS 데이터센터로 나가기 전에 로컬에서 처리해야 할 때, 로컬에서 처리하고 나머지 데이터만 Region으로 전달할 수 있습니다.</li>
+        <li><strong>온프레미스 의존 애플리케이션:</strong> 물리 서버, 네트워크 장비, 데이터베이스 등에 강하게 의존해 완전히 클라우드로 옮기기 어려운 시스템을 AWS 방식으로 운영할 수 있습니다.</li>
+      </ul>
+      <h3 class="s">구조: Outposts와 AWS Region이 연결된 형태</h3>
+      <dl class="def">
+        <dt>Service Link (Home Region ↔ Outposts)</dt>
+        <dd>Outposts와 해당 Outposts의 Home Region을 연결하는 <strong>암호화된 VPN 연결</strong>입니다.
+          <ul>
+            <li>용도: Outposts의 관리와 모니터링, 펌웨어와 소프트웨어 업데이트, Region과 Outposts 간 VPC 트래픽 전달, Region의 AWS 서비스와 연동</li>
+            <li>Outposts는 고객 데이터센터에 설치되어 있지만 AWS Region과 지속적으로 연결되어 운영됩니다.</li>
+            <li>시험 포인트: Service Link가 끊어지면 관리와 Region에 의존하는 작업에 영향을 줄 수 있으므로 연결의 가용성을 고려해야 합니다.</li>
+          </ul>
+        </dd>
+        <dt>Local Gateway (온프레미스 ↔ Outposts)</dt>
+        <dd>Outposts와 고객의 온프레미스 네트워크를 연결하는 네트워크 구성 요소로, 사내 네트워크와의 데이터 통신이 주목적입니다.
+          <ul>
+            <li>Local Gateway는 Outposts Rack의 구성 요소입니다. Outposts Server는 Local Network Interface 등 다른 연결 방식을 사용합니다.</li>
+          </ul>
+        </dd>
+      </dl>
+      <h3 class="s">Region과 AZ 중 어디에 속할까?</h3>
+      <ul class="pts">
+        <li>Outposts는 별개의 독립된 Region이 아닙니다.</li>
+        <li>각 Outposts는 특정 Region의 특정 AZ에 연결되며, 해당 AZ의 확장으로 동작합니다(데이터센터가 그 AZ에 있는 것은 아니지만 있는 것처럼 동작).</li>
+        <li>VPC는 Region에 만들고, Outposts에 리소스를 배치하려면 그 VPC에 <strong>Outpost Subnet</strong>을 만들어야 합니다.</li>
+        <li>이 Subnet에 EC2 인스턴스를 배치하면 실제 컴퓨팅은 고객 데이터센터에 설치된 Outposts 하드웨어에서 처리됩니다.</li>
+      </ul>
+      <h3 class="s">하드웨어 관리</h3>
+      <ul class="pts">
+        <li>AWS가 하드웨어를 설치하고 관리하는 완전 관리형 서비스입니다.</li>
+        <li>다만 고객 시설에 설치되므로 고객도 전력, 공간, 냉각, 네트워크 연결 등 설치 환경을 준비해야 합니다.</li>
+        <li>모든 AWS 서비스가 Outposts에서 지원된다고 단정할 수 없습니다. Outposts의 형태와 Home Region에 따라 차이가 있으니 사전에 확인해야 합니다.</li>
+      </ul>
+    </section>
+    <section 
+      id="zones-adv"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Local Zones, Wavelength 심화</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <p>기초 개요는 위 “인프라 확장·엣지 서비스 개요”를 참고하세요. 두 서비스는 모두 Region의 확장 인프라입니다.</p>
+      <h3 class="s">AWS Local Zones</h3>
+      <ul class="pts">
+        <li>AWS Region의 데이터센터가 사용자와 멀어 지연 시간이 생길 때, 사용자와 가까운 지역에 일부 AWS 인프라를 제공합니다.</li>
+        <li>예: 미국 주요 도시의 사용자에게 실시간 영상 편집 서비스를 제공하는 기업이 도시 인근 Local Zone의 EC2 인스턴스를 쓰게 하면 지연 시간을 줄일 수 있습니다.</li>
+        <li>지연 시간에 민감한 작업에 적합합니다: 실시간 게임, 미디어 콘텐츠 제작과 렌더링, 가상 데스크톱, 실시간 영상 처리</li>
+        <li><strong>Parent Region과 연결:</strong> Local Zone도 독립된 Region이 아니라 특정 AWS Region(Parent Region)에 연결된 확장 인프라입니다.</li>
+        <li><strong>모든 서비스를 제공하지는 않음:</strong> AZ는 Region의 핵심 인프라로 폭넓은 서비스를 제공하지만, Local Zone은 지연 시간에 민감한 워크로드에 필요한 일부 서비스 중심입니다. 사용할 수 없는 서비스가 있을 수 있어 지원 서비스를 확인해야 하며, Local Zone에서는 컴퓨팅을 실행하고 다른 서비스는 Parent Region에서 쓰는 형태로 설계할 수 있습니다.</li>
+        <li>별도의 VPC를 새로 만드는 것이 아니라 기존 VPC를 Local Zone까지 확장하는 방식입니다.</li>
+      </ul>
+      <h3 class="s">AWS Wavelength</h3>
+      <ul class="pts">
+        <li>통신 사업자의 5G 네트워크 내부에 AWS 컴퓨팅과 스토리지를 배치해 5G 모바일 기기와 사용자에게 초저지연 서비스를 제공합니다.</li>
+        <li>Local Zones처럼 사용자와 가까운 곳에서 리소스를 실행하지만, <strong>통신 사업자의 5G 네트워크와 연결된다는 점</strong>이 핵심 차이입니다.</li>
+      </ul>
+      <h3 class="s">Wavelength를 쓰는 이유</h3>
+      <ul class="pts">
+        <li>기존 구조에서는 스마트폰의 요청이 통신 사업자 네트워크를 거쳐 AWS Region까지 가야 할 수 있어, 물리적 거리와 네트워크 경로 때문에 지연이 생깁니다.</li>
+        <li>Wavelength는 통신 사업자의 5G 네트워크 안에 AWS 인프라를 두어 이 경로를 줄입니다.</li>
+        <li>활용 사례: 5G 기반 클라우드 게임, 자율주행 차량과 커넥티드 카, 실시간 영상 스트리밍과 처리, IoT와 산업용 모바일 장치, AR/VR 서비스</li>
+      </ul>
+      <h3 class="s">Wavelength의 구조</h3>
+      <p>AWS Parent Region ↔ Wavelength Zone(통신 사업자 데이터센터 내부) ↔ 5G 스마트폰과 모바일 기기</p>
+      <dl class="def">
+        <dt>Wavelength Zone</dt>
+        <dd>통신 사업자(예: 한국의 SK Telecom, 미국의 Verizon, 일본의 KDDI, 유럽의 Vodafone)의 데이터센터에 배치된 AWS 인프라입니다. 일반 Region과 달리 통신 사업자의 5G 네트워크에 직접 연결되는 위치에 있습니다.
+          <ul>
+            <li>Parent Region의 논리적 확장입니다. VPC를 Parent Region에서 만든 뒤 Wavelength Zone에 Subnet을 만들어 EC2 등의 리소스를 배치합니다.</li>
+          </ul>
+        </dd>
+        <dt>Carrier Gateway</dt>
+        <dd>Wavelength와 통신 사업자 네트워크 간 연결을 담당하며, 주요 역할은 다음과 같습니다.
+          <ul>
+            <li>특정 위치의 통신 사업자 네트워크에서 들어오는 트래픽 허용</li>
+            <li>통신 사업자 네트워크로 나가는 트래픽 전달</li>
+            <li>인터넷으로 나가는 아웃바운드 트래픽 전달</li>
+          </ul>
+        </dd>
+      </dl>
+      <div class="note">
+        <h3>Home Region과 Parent Region</h3>
+        <ul>
+          <li>두 용어는 서로 다른 개념이 아니라, 서비스별로 공식 용어가 다를 뿐입니다.</li>
+          <li>Outposts → Home Region(Parent Region으로 표현해도 큰 문제는 없음)</li>
+          <li>Local Zones → Parent Region</li>
+          <li>Wavelength → Parent Region</li>
+        </ul>
+      </div>
+    </section>
+    <section 
+      id="cloudfront-adv"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">CloudFront, Global Accelerator 심화</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <p>기초 개요는 위 “인프라 확장·엣지 서비스 개요”를 참고하세요. CloudFront는 전 세계에 분산된 Edge Location으로 사용자에게 콘텐츠를 빠르고 효율적으로 전달합니다. 예를 들어 미국 Region의 S3 버킷에 이미지가 있으면 한국 사용자는 미국까지 요청해야 해서 지연이 생기는데, CloudFront는 <strong>자주 요청하는 콘텐츠</strong>를 가까운 Edge Location에 캐싱해 빠르게 전달합니다.</p>
+      <h3 class="s">핵심 구성 요소</h3>
+      <dl class="def">
+        <dt>Origin</dt>
+        <dd>CloudFront가 전달할 원본 콘텐츠를 가져오는 서버 또는 저장소입니다. 대표적으로 Amazon S3 버킷, EC2에서 실행되는 웹 서버, ALB, MediaPackage, 외부 HTTP 서버가 있습니다.</dd>
+        <dt>Distribution</dt>
+        <dd>콘텐츠를 어디서 가져와 어떻게 전달할지 정의하는 CloudFront의 배포 설정 단위입니다. 생성할 때 Origin 서버, Cache Behavior, Viewer Protocol Policy, Cache Policy, HTTPS 인증서, 접근 제어 설정 등을 정합니다. Distribution은 글로벌 서비스라서 특정 Region에 종속되는 일반 리소스와 다릅니다.</dd>
+        <dt>Edge Location</dt>
+        <dd>콘텐츠를 사용자에게 전달하는 전 세계의 분산된 네트워크 거점입니다. 사용자가 Distribution에 접속하면 DNS가 요청을 적절한 Edge Location으로 연결합니다. 항상 물리적으로 가장 가까운 곳으로 연결되는 것은 아니며, 지연 시간 등을 고려해 선택됩니다.</dd>
+        <dt>Regional Edge Cache</dt>
+        <dd>Edge Location과 Origin 사이에 있는 중간 캐시 계층입니다. 한국 Edge Location에서 한동안 요청되지 않아 캐시에서 사라진 이미지를 다시 요청해도, Regional Edge Cache에 남아 있으면 Origin까지 가지 않고 그곳에서 가져옵니다. 일반 Edge Location보다 캐시 용량이 커서, 인기가 높지 않은 콘텐츠도 Origin에 매번 접근하지 않고 제공하도록 돕습니다.</dd>
+      </dl>
+      <h3 class="s">콘텐츠 전달 과정</h3>
+      <p>예: Origin은 미국 Region의 S3 버킷, 사용자는 대한민국, Edge Location은 한국의 CloudFront 거점인 상황입니다.</p>
+      <ol class="pts">
+        <li>사용자가 콘텐츠를 요청합니다.</li>
+        <li>DNS가 적절한 CloudFront Edge Location으로 요청을 연결합니다.</li>
+        <li>Edge Location이 캐시에 요청한 콘텐츠가 있는지 확인합니다.</li>
+        <li>있으면(Cache Hit) 바로 사용자에게 전달합니다.</li>
+        <li>없으면(Cache Miss) Regional Edge Cache를 확인하고, 거기에도 없으면 Origin에 요청합니다.</li>
+        <li>가져온 콘텐츠를 <strong>캐시에 저장</strong>하고 사용자에게 전달합니다.</li>
+      </ol>
+      <p>Regional Edge Cache가 모든 요청에서 반드시 거치는 단계는 아닙니다. 실제 동작은 콘텐츠와 배포 설정에 따라 달라집니다.</p>
+      <h3 class="s">TTL과 Cache Policy</h3>
+      <p>TTL(Time To Live)은 콘텐츠를 캐시에 보관할 시간입니다. 로고 이미지처럼 잘 바뀌지 않는 콘텐츠는 오래 캐싱해도 되지만, 실시간 가격 정보처럼 자주 바뀌는 데이터는 짧게 캐싱하거나 캐싱하지 않는 것이 적절합니다.</p>
+      <ul class="pts">
+        <li>Minimum TTL: 캐시할 최소 시간</li>
+        <li>Default TTL: Origin이 별도의 캐시 지시자를 제공하지 않을 때 적용되는 기본 시간</li>
+        <li>Maximum TTL: 캐시할 수 있는 최대 시간</li>
+      </ul>
+      <div class="note">
+        <h3>주의 사항</h3>
+        <ul>
+          <li>Origin이 <code>Cache-Control: no-cache</code> 또는 <code>no-store</code>를 보내도, Min TTL이 0보다 크면 CloudFront는 그 시간 동안 캐싱할 수 있습니다.</li>
+          <li>Origin의 지시를 그대로 따르게 하려면 Min TTL을 0으로 둡니다. 캐싱 자체를 끄려면 모든 TTL을 0으로 설정합니다(관리형 CachingDisabled 정책 등).</li>
+          <li>콘텐츠를 바꿨는데 기존 캐시가 계속 전달되면 <strong>Invalidation</strong>을 사용합니다. 해당 객체를 캐시에서 무효화해 다음 요청에서 최신 콘텐츠를 가져오게 합니다.</li>
+        </ul>
+      </div>
+      <h3 class="s">CloudFront의 보안 기능</h3>
+      <dl class="def">
+        <dt>HTTPS</dt>
+        <dd>Viewer와 CloudFront 사이의 통신을 HTTPS로 할 수 있고, CloudFront와 Origin 사이의 통신도 HTTPS로 설정할 수 있습니다. 두 구간은 별개의 통신 구간입니다.</dd>
+        <dt>Origin Access Control(OAC)</dt>
+        <dd>사용자가 CloudFront를 거치지 않고 S3의 직접 URL로 접근하면 CloudFront의 접근 제어를 우회할 수 있습니다. 이를 방지하기 위해 OAC를 사용합니다.
+          <ul>
+            <li>지정한 CloudFront Distribution만 S3 객체를 읽도록 권한을 구성해, 사용자가 CloudFront를 통해서만 콘텐츠에 접근하게 합니다.</li>
+            <li>기존 OAI보다 OAC가 더 권장되며, OAC는 SSE-KMS 암호화와 PUT/DELETE 요청 등도 지원합니다.</li>
+          </ul>
+        </dd>
+        <dt>Signed URL과 Signed Cookie</dt>
+        <dd>특정 사용자에게만 콘텐츠를 제공할 때 씁니다. 예를 들어 유료 동영상 서비스에서 다음처럼 구분합니다.
+          <ul>
+            <li>Signed URL: <strong>특정 파일 하나</strong>에 대한 접근을 제한할 때 적합합니다(예: 유료 파일 하나를 다운로드하도록 허용).</li>
+            <li>Signed Cookie: <strong>여러 파일</strong>에 대한 접근을 한 번에 제공할 때 적합합니다(예: 동영상 강의의 여러 영상 파일 재생).</li>
+          </ul>
+        </dd>
+      </dl>
+      <h3 class="s">CloudFront와 Global Accelerator의 차이</h3>
+      <div class="tbl"><table>
+        <caption>CloudFront와 Global Accelerator 비교</caption>
+        <thead><tr><th scope="col">항목</th><th scope="col">CloudFront</th><th scope="col">Global Accelerator</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">핵심 목적</th><td>콘텐츠 전송 가속</td><td>애플리케이션 네트워크 연결 최적화</td></tr>
+          <tr><th scope="row">주요 방식</th><td>콘텐츠 <strong>캐싱</strong></td><td>AWS 글로벌 네트워크를 통한 트래픽 라우팅(Edge Location 활용)</td></tr>
+          <tr><th scope="row">캐싱</th><td>O</td><td>X</td></tr>
+          <tr><th scope="row">프로토콜</th><td>주로 HTTP/HTTPS(Layer 7)</td><td>TCP/UDP(Layer 4)</td></tr>
+          <tr><th scope="row">주요 기능</th><td>Edge Location, CDN</td><td>고정 Anycast IP, Endpoint 장애 조치</td></tr>
+          <tr><th scope="row">대표 사례</th><td>이미지, 동영상, 웹 콘텐츠</td><td>게임 서버, API, 글로벌 애플리케이션</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note">
+        <h3>구분 방법</h3>
+        <ul>
+          <li>전 세계 사용자에게 이미지와 동영상을 빠르게 제공하고 싶다 → CloudFront</li>
+          <li>전 세계 사용자의 TCP/UDP 트래픽을 가장 적절한 AWS 엔드포인트로 전달하고 싶다 → Global Accelerator</li>
+          <li>CloudFront는 콘텐츠를 캐싱하지만 Global Accelerator는 캐싱하지 않는다는 차이를 기억하세요.</li>
+        </ul>
+      </div>
+    </section>
+    <p class="group">보안과 IAM</p>
+
+    <section 
+      id="arn"
+      data-domain="2"
+      data-level="basic"
+    >
+      <h2 class="t">Amazon Resource Name(ARN)</h2>
+      <p class="tag d2">도메인 2 보안 및 규정 준수</p>
+      <ul class="pts">
+        <li>AWS가 제공하는 모든 리소스의 고유 아이디입니다.</li>
+        <li>형식: <code>arn:partition:service:region:account-id:resource</code></li>
+        <li>IAM 정책(JSON)의 Resource 항목에서 와일드카드(*)로 다수의 리소스를 지정할 수 있습니다. 예: <code>arn:aws:s3:::버킷이름/*</code></li>
+      </ul>
+    </section>
+
+    <section 
+      id="root"
+      data-domain="2"
+      data-level="basic"
+    >
+      <h2 class="t">루트 유저(Root User)</h2>
+      <p class="tag d2">도메인 2 보안 및 규정 준수</p>
+      <ul class="pts">
+        <li>Root User 계정을 만들면 모든 권한을 자동으로 가집니다.</li>
+        <li>계정을 만들 때 쓴 이메일 주소로 로그인합니다.</li>
+        <li>탈취당하면 복구가 매우 어렵습니다. 루트 계정의 사용을 자제하고 MFA(Multi-Factor Authentication)를 설정해야 합니다.</li>
+        <li>관리용으로만 사용하는 것을 권장합니다(ex. 계정 설정 변경, Billing 등). 일상적인 사용에서는 IAM User나 Role을 만들어 최소한의 권한을 부여하여 이용하는 것이 강력히 권장됩니다.</li>
+      </ul>
+      <div class="note">
+        <h3>자주 나오는 오개념</h3>
+        <ul>
+          <li>루트 유저도 AWS API를 호출할 수 있습니다(권장하지 않음). “API 호출이 불가능하다”는 설명은 오개념입니다.</li>
+          <li>보안상 Access Key와 Secret Access Key를 부여하지 않는 것이 좋지만 불가능한 것은 아닙니다. “생성이나 발급이 불가하다”는 설명도 오개념이며, 최대 2개까지 생성할 수 있습니다.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section 
+      id="iam-user"
+      data-domain="2"
+      data-level="basic"
+    >
+      <h2 class="t">IAM User</h2>
+      <p class="tag d2">도메인 2 보안 및 규정 준수</p>
+      <ul class="pts">
+        <li>IAM(Identity and Access Management)으로 만든 유저이며, 만들 때 주어진 아이디로 로그인합니다.</li>
+        <li>기본 권한이 없습니다. 권한을 부여할 수 있는 주체(루트 또는 IAM 권한이 있는 관리자)가 따로 권한을 부여해야 하며, 최소 권한 원칙을 지키는 것이 권장됩니다. 처음 만들 때 권한이나 정책을 주지 않았다면 어떤 권한도 없는 상태(암묵적 거부)입니다.</li>
+        <li>사람이 아닌 애플리케이션 같은 가상의 주체를 대표할 수도 있습니다.</li>
+        <li>콘솔에 접근할 때는 비밀번호를, CLI/SDK로 접근할 때는 Access Key와 Secret Access Key를 가집니다.(Access Key와 Secret Access Key는 IAM User 생성 시 자동으로 발급되는 것이 아닙니다. 별도의 발급과정을 거쳐야 발급됩니다.)</li>
+        <li>AWS API를 호출할 수 있습니다. 비유하자면 Access Key는 아이디, Secret Access Key는 패스워드에 해당합니다.</li>
+        <li>AWS 관리를 제외한 모든 작업은 IAM User를 만들어 사용하는 것이 권장됩니다.</li>
+        <li>IAM User에 관리자 권한을 부여하더라도 Root 계정 전용 작업(계정 이름·이메일·루트 비밀번호 변경, 계정 해지, 지원 플랜 변경 등)은 할 수 없습니다. 또한 빌링(Billing) 관련 권한은 Root User가 별도로 허용해야 합니다.</li>
+      </ul>
+    </section>
+
+    <section 
+      id="iam"
+      data-domain="2"
+      data-level="basic"
+    >
+      <h2 class="t">IAM 소개</h2>
+      <p class="tag d2">도메인 2 보안 및 규정 준수</p>
+      <ul class="pts">
+        <li>AWS 리소스에 대한 인증(Authentication)과 인가(Authorization)를 중앙에서 관리하는 서비스로, 서비스와 리소스에 대한 액세스를 안전하게 관리합니다.</li>
+        <li>IAM User와 Group을 만들고 관리하며 AWS 리소스에 대한 액세스를 허용하거나 거부합니다.</li>
+        <li>AWS 계정 관리와 리소스, 사용자, 서비스의 권한 제어(서비스 사용을 위한 인증 정보 부여), 사용자 생성과 관리, 계정 보안(사용자 패스워드 정책 관리, 일정 시간마다 패스워드 변경 등), 다른 계정과의 리소스 공유 등을 할 수 있습니다.</li>
+        <li>계정에 별명을 부여하면 로그인 주소를 만들 수 있습니다.</li>
+        <li>IAM은 글로벌 서비스입니다. 리전에 종속되지 않고 전 세계 모든 리전에서 동일하게 적용되어, 리전과 상관없이 사용할 수 있습니다.</li>
+        <li>최소 권한의 원칙(Least Privilege): 기본적으로 모든 요청은 암묵적으로 거부(Implicit Deny)되어 있습니다. 필요한 권한만 최소한으로 부여하는 것이 AWS 보안의 기본입니다.</li>
+        <li>무료 서비스입니다. IAM 사용 자체로는 비용이 들지 않습니다.</li>
+      </ul>
+    </section>
+
+    <section 
+      id="iam-parts"
+      data-domain="2"
+      data-level="basic"
+    >
+      <h2 class="t">IAM 개요</h2>
+      <p class="tag d2">도메인 2 보안 및 규정 준수</p>
+      <dl class="def">
+        <dt>IAM User</dt>
+        <dd>IAM 사용자입니다.</dd>
+        <dt>IAM Group</dt>
+        <dd>IAM User들의 집합입니다. 그룹에 Policy를 Attach하고 그룹에 User를 추가하면 같은 권한을 여러 User에게 한 번에 줄 수 있어 편리하고 관리가 쉽습니다.
+          <ul>
+            <li>그룹 자체는 로그인하거나 인증받을 수 없고, 그룹 안에 그룹을 넣을 수 없습니다.</li>
+            <li>한 User가 여러 Group에 포함될 수 있습니다.</li>
+          </ul>
+        </dd>
+        <dt>IAM Role</dt>
+        <dd>사용자, AWS 서비스, 다른 계정 등이 임시로 맡을(assume) 수 있는 권한 묶음입니다(임시 자격 증명 사용). 예: EC2 인스턴스가 키 없이 S3에 접근하도록 Role을 연결합니다.
+          <ul>
+            <li>장기 자격 증명(비밀번호, Access Key)이 없고 임시 보안 자격 증명(STS)을 사용합니다.</li>
+          </ul>
+        </dd>
+        <dt>IAM Policy(정책)</dt>
+        <dd>User, Group, Role이 무엇을 할 수 있는지를 적은 JSON 형식의 문서입니다. 동작 원리는 아래 항목에서 설명합니다.</dd>
+      </dl>
+      <p>Root User는 IAM으로 만든 개체가 아니라 계정 자체의 최고 관리자이므로 IAM의 구성 요소에 포함되지 않습니다.</p>
+    </section>
+
+    <section 
+      id="policy"
+      data-domain="2"
+      data-level="basic"
+    >
+      <h2 class="t">IAM Policy와 동작 원리</h2>
+      <p class="tag d2">도메인 2 보안 및 규정 준수</p>
+      <p>Policy는 JSON 형식 문서로 작성되며, “누가 무엇을 할 수 있는지”를 정의합니다.</p>
+      <h3 class="s">평가 원리</h3>
+      <ul class="pts">
+        <li>기본 상태: Implicit Deny(암묵적 거부)</li>
+        <li>Allow 정책이 있으면 Allow</li>
+        <li>Allow와 Deny가 동시에 있으면 Deny 우선</li>
+      </ul>
+      <div class="note">
+        <h3>핵심</h3>
+        <ul>
+          <li>명시적 거부(Explicit Deny)가 항상 명시적 허용을 압도합니다.</li>
+        </ul>
+      </div>
+      <h3 class="s">예시</h3>
+<pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::my-bucket/*"
+    }
+  ]
+}</code></pre>
+      <ul class="pts">
+        <li><code>Effect</code>: Allow(허용) 또는 Deny(거부)</li>
+        <li><code>Action</code>: 수행할 작업</li>
+        <li><code>Resource</code>: 대상 리소스</li>
+      </ul>
+    </section>
+
+    <section 
+      id="boundary"
+      data-domain="2"
+      data-level="advanced"
+    >
+      <h2 class="t">IAM Permissions Boundary(권한 경계)</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <h3 class="s">Permissions Boundary란?</h3>
+      <ul class="pts">
+        <li>IAM 사용자나 역할에 일반적인 정책을 아무리 많이 붙여도, 권한 경계가 그어 놓은 한계선을 넘는 권한은 행사할 수 없게 막는 경계입니다.</li>
+        <li>Permissions Boundary 자체는 권한을 부여하지 않고, 개체가 가질 수 있는 <strong>권한의 상한선</strong>만 정합니다.</li>
+      </ul>
+      <h3 class="s">작동 방식</h3>
+      <ul class="pts">
+        <li>사용자의 최종 실행 권한은 IAM 정책과 Permissions Boundary의 교집합으로 결정됩니다.</li>
+        <li>예를 들어 사용자의 IAM Policy에 모든 권한이 붙어 있어도 Permissions Boundary가 S3로 한정되어 있으면, 그 사용자는 S3에만 접근할 수 있습니다.</li>
+      </ul>
+      <h3 class="s">사용 이유</h3>
+      <ul class="pts">
+        <li>대표적인 목적은 <strong>권한 상승(Privilege Escalation) 방지와 권한 위임</strong>입니다.</li>
+        <li>시나리오: 회사의 중앙 보안팀이 개발자 팀에게 필요한 IAM Role과 User를 스스로 만들 수 있는 권한을 위임하려고 합니다.</li>
+        <li>위험 요소: 개발자가 마음대로 IAM Role을 만들 수 있으면, AdministratorAccess 권한을 가진 최고 관리자 역할을 새로 만들어 스스로 부여할 위험이 있습니다(권한 상승).</li>
+        <li>해결책: 개발자에게 IAM User/Role 생성 권한을 주되, 새로 만드는 모든 User/Role에는 반드시 지정된 Permissions Boundary를 붙여야만 생성되도록 조건을 걸어 둡니다.</li>
+      </ul>
+      <div class="note">
+        <h3>간단 요약</h3>
+        <ul>
+          <li>Permissions Boundary는 <strong>권한을 직접 주는 게 아니라</strong>, IAM User/Role이 넘지 못할 <strong>최대 권한의 상한선을 설정</strong>하는 기능입니다.</li>
+          <li>개발자에게 IAM Role 생성 권한을 안전하게 위임(권한 상승 방지)할 때 씁니다.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section 
+      id="iam-compare"
+      data-domain="2"
+      data-level="advanced"
+    >
+      <h2 class="t">Permissions Boundary vs SCP vs Resource-based Policy</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <p>시험에서 자주 헷갈리는 세 가지입니다.</p>
+      <dl class="def">
+        <dt>Permissions Boundary</dt>
+        <dd>
+          <ul>
+            <li>적용 대상: 단일 IAM User/Role</li>
+            <li>목적: 특정 사용자/역할의 <strong>권한 상한선 지정</strong>, <strong>권한 상승 방지</strong></li>
+            <li>Root 사용자 영향: 영향 없음</li>
+          </ul>
+        </dd>
+        <dt>SCP(Service Control Policy)</dt>
+        <dd>
+          <ul>
+            <li>적용 대상: AWS Organizations의 계정/OU 전체</li>
+            <li>목적: 계정 전체에 허용되는 권한의 최대 범위를 제한(예: 특정 AWS 서비스 사용 자체를 금지)</li>
+            <li>Root 사용자 영향: 멤버 계정의 Root 사용자를 포함한 계정 내 모든 사용자에게 영향</li>
+            <li>단, Organizations의 관리 계정(Management Account)에는 적용되지 않습니다.</li>
+          </ul>
+        </dd>
+        <dt>Resource-based Policy</dt>
+        <dd>
+          <ul>
+            <li>적용 대상: S3, SQS 등 특정 리소스 자체</li>
+            <li>목적: 리소스에 접근할 수 있는 외부/내부 주체 지정</li>
+          </ul>
+        </dd>
+      </dl>
+    </section>
+
+    <p class="group">Amazon EC2</p>
+
+    <section 
+      id="ec2"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">EC2(Elastic Compute Cloud) 개요</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+      <p>AWS 클라우드에서 제공하는 가상 서버 서비스입니다. Elastic이라는 이름처럼 필요한 만큼 클릭 몇 번으로 수 분 만에 서버를 만들고, 사양을 자유롭게 바꾸거나 삭제할 수 있습니다.</p>
+      <h3 class="s">핵심 구성 요소 4가지</h3>
+      <dl class="def">
+        <dt>AMI(Amazon Machine Image)</dt>
+        <dd>서버의 템플릿(붕어빵 틀)입니다. OS 종류와 사전 설치된 소프트웨어가 담겨 있습니다.
+          <ul>
+            <li>AMI로 EC2를 복제할 수 있고, 다른 리전으로 복사하거나 다른 계정과 공유할 수 있습니다.</li>
+            <li>스냅샷을 기반으로 AMI를 만들 수 있습니다.</li>
+          </ul>
+        </dd>
+        <dt>인스턴스 유형</dt>
+        <dd>서버의 사양(CPU, 메모리, 그래픽 카드 등)을 결정합니다.</dd>
+        <dt>EBS(Elastic Block Store)</dt>
+        <dd>EC2 인스턴스에 붙여 쓰는 가상 하드디스크입니다.</dd>
+        <dt>보안 그룹(Security Group)</dt>
+        <dd>EC2를 보호하는 가상 방화벽입니다.</dd>
+      </dl>
+    </section>
+
+    <section 
+      id="ec2-pricing"
+      data-domain="4"
+      data-level="basic"
+    >
+      <h2 class="t">EC2 인스턴스 구매 옵션</h2>
+      <p class="tag d4">도메인 4 요금 및 지원</p>
+      <dl class="def">
+        <dt>On-Demand</dt>
+        <dd>장기 약정 없이 사용한 만큼만 초 단위로 지불합니다. 유연하지만 시간당 가격이 가장 비쌉니다. 예측하기 어려운 단기 워크로드나 처음 하는 테스트와 개발 환경에 알맞습니다.</dd>
+        <dt>Savings Plans</dt>
+        <dd>1년 또는 3년 동안 시간당 일정 금액의 사용을 약정하고 할인을 받습니다(아래 Savings Plans 항목 참고). 리전이나 인스턴스 패밀리를 유연하게 바꾸며 장기 사용할 때 알맞습니다(Compute Savings Plans 기준).</dd>
+        <dt>Reserved Instances(RI)</dt>
+        <dd>일정한 인스턴스 구성을 1년 또는 3년 약정해 큰 할인(최대 72%)을 받습니다. 특정 AZ를 지정한 RI(Zonal RI)는 그 AZ의 용량도 예약합니다. 예측 가능하고 지속적인 사용에 알맞습니다.</dd>
+        <dt>Spot Instance</dt>
+        <dd>AWS의 남는 여유 컴퓨팅 용량을 저렴하게(최대 90% 할인) 사용합니다. AWS가 용량이 필요하면 2분 전에 알린 뒤 인스턴스를 회수하므로 중단될 수 있습니다. 중단되어도 괜찮은 워크로드(배치 작업, 빅데이터, 유전체 분석 등)에 알맞습니다.</dd>
+        <dt>Dedicated Hosts</dt>
+        <dd>고객 전용 물리 서버 전체를 할당받습니다. 소켓/코어 기반의 기존 소프트웨어 라이선스(BYOL)를 지켜야 하거나 엄격한 규정 준수가 필요할 때 알맞습니다.</dd>
+        <dt>Dedicated Instances</dt>
+        <dd>다른 고객과 물리 하드웨어를 공유하지 않는 인스턴스입니다. 하드웨어 격리가 필요할 때 씁니다.</dd>
+        <dt>On-Demand Capacity Reservations</dt>
+        <dd>특정 AZ의 EC2 용량을 확보합니다. 필요할 때 인스턴스를 시작할 수 있도록 용량을 미리 잡아 둡니다.</dd>
+        <dt>Capacity Blocks for ML</dt>
+        <dd>GPU 가속 인스턴스를 특정 기간에 예약합니다. ML 학습처럼 GPU 용량이 정해진 시간대에 필요할 때 씁니다.</dd>
+      </dl>
+    </section>
+
+    <section 
+      id="savings"
+      data-domain="4"
+      data-level="basic"
+    >
+      <h2 class="t">Savings Plans</h2>
+      <p class="tag d4">도메인 4 요금 및 지원</p>
+      <p>1년 또는 3년 동안 시간당 일정 금액의 컴퓨팅 사용량을 약정하고, 약정에 해당하는 사용량에 할인 요금을 적용받는 방식입니다.</p>
+      <ul class="pts">
+        <li>예를 들어 시간당 1달러를 약정하면 매 시간 1달러어치 사용량을 약정하는 것이며, 인스턴스 한 대를 예약한다는 뜻이 아닙니다.</li>
+        <li>약정 범위에 해당하는 사용량에는 Savings Plans 할인 요금이 적용됩니다.</li>
+        <li>약정 범위를 넘는 사용량에는 일반적으로 On-Demand 요금이 적용됩니다.</li>
+        <li>약정한 사용량을 채우지 못한 시간에도 쓰지 않은 약정분에 비용이 발생할 수 있습니다.</li>
+      </ul>
+      <p>실제 사용량이 장기간 안정적이면 유리합니다. 하지만 앞으로의 사용량을 예측하지 못한 채 지나치게 큰 약정을 하면 절감 효과가 작아지고, 쓰지 않는 약정분 비용까지 낼 수 있습니다.</p>
+      <h3 class="s">두 가지 주요 유형</h3>
+      <dl class="def">
+        <dt>Compute Savings Plans(높은 유연성)</dt>
+        <dd>EC2 인스턴스 패밀리, 크기, 리전, 운영체제 등이 달라져도 폭넓게 적용됩니다. EC2뿐 아니라 AWS Fargate와 AWS Lambda의 적격 사용량에도 적용됩니다.
+          <ul>
+            <li>예: c7i에서 m7i로 변경</li>
+            <li>예: 서울 리전에서 다른 리전으로 워크로드 이전</li>
+            <li>예: EC2에서 Fargate로 워크로드 이전</li>
+          </ul>
+          위 변화가 있어도 적격 사용량에 대한 할인 혜택이 유지됩니다.
+        </dd>
+        <dt>EC2 Instance Savings Plans</dt>
+        <dd>선택한 리전과 인스턴스 패밀리에 약정하는 대신 더 높은 할인율을 받는 유형입니다. 인스턴스 크기, 운영체제, 테넌시를 바꿔도 약정 조건을 충족하면 할인 혜택이 유지됩니다.
+          <ul>
+            <li>예: 서울 리전의 m7i 패밀리에 약정</li>
+            <li>예: m7i.large에서 m7i.2xlarge로 크기 변경</li>
+            <li>예: 같은 패밀리 안에서 운영체제 변경</li>
+          </ul>
+          단, 다른 인스턴스 패밀리로 바꾸거나 다른 리전으로 이동하면 해당 사용량은 이 약정의 적용 범위를 벗어날 수 있습니다.
+        </dd>
+      </dl>
+      <h3 class="s">Savings Plans와 RI의 관계</h3>
+      <p>둘 다 장기 약정으로 할인을 받지만 약정 방식이 다릅니다. Savings Plans는 시간당 금액 기준으로 사용량을 약정하고, RI는 특정 인스턴스 구성 또는 패밀리, 리전 등의 조건에 따라 할인을 받습니다. RI는 유형에 따라 조건과 유연성이 달라집니다.</p>
+    </section>
+
+    <section 
+      id="ec2-storage"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">EC2 스토리지: EBS와 인스턴스 스토어</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+      <div class="cols">
+        <div>
+          <h3>EBS(Elastic Block Store)</h3>
+          <ul class="pts">
+            <li>네트워크로 연결된 가상 디스크입니다.</li>
+            <li>인스턴스를 중지(stop)했다가 다시 시작해도 데이터가 영구 보존됩니다. 삭제(terminate)할 때는 루트 볼륨이 기본적으로 함께 삭제됩니다(아래 “Terminate 시 EBS 삭제 여부” 참고).</li>
+            <li>독립적으로 스냅샷을 찍어 백업할 수 있습니다(스냅샷은 S3에 저장).</li>
+            <li>기본적으로 한 번에 하나의 EC2에 연결합니다. io1·io2 볼륨은 Multi-Attach로 같은 AZ의 여러 인스턴스에 연결할 수 있습니다.</li>
+            <li>EC2와 같은 AZ에 존재합니다.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>인스턴스 스토어</h3>
+          <ul class="pts">
+            <li>EC2의 물리 서버에 직접 붙어 있는 고성능 스토리지입니다(주로 서버 메인보드에 꽂힌 SSD).</li>
+            <li>서버 바로 옆에 있어 네트워크를 거치지 않고 I/O를 하므로 속도가 극도로 빠릅니다(최고의 I/O 성능).</li>
+            <li>휘발성입니다. EC2 인스턴스를 중지하거나 삭제하면 데이터가 모두 사라집니다.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section 
+      id="snapshot"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">Snapshot</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+      <ul class="pts">
+        <li>특정 시점의 EBS 상태를 저장한 것입니다. 필요하면 스냅샷으로 그 시점의 EBS를 복구할 수 있습니다.</li>
+        <li>S3에 증분식으로 보관됩니다. 증분식 저장은 첫 백업 이후 <strong>변경되거나 추가된 데이터 블록만 골라서 저장</strong>하는 방식입니다.</li>
+      </ul>
+    </section>
+
+    <section 
+      id="ebs-delete"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Terminate 시 EBS 삭제 여부</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <dl class="def">
+        <dt>루트 볼륨</dt>
+        <dd>기본값은 DeleteOnTermination = True입니다. 기본 설정에서는 인스턴스를 삭제하면 루트 볼륨도 함께 삭제됩니다. 인스턴스를 만들 때나 설정에서 이 플래그를 False로 바꾸면 인스턴스를 삭제해도 루트 EBS 볼륨이 삭제되지 않고 남습니다.</dd>
+        <dt>추가로 연결한 데이터 볼륨(Non-Root EBS)</dt>
+        <dd>기본값은 DeleteOnTermination = False입니다. 루트 볼륨 외에 추가로 붙인 EBS 볼륨은 인스턴스를 삭제해도 자동으로 삭제되지 않고 분리된 채 계정에 남습니다.</dd>
+      </dl>
+      <div class="note">
+        <h3>자주 나오는 유형(SAA-C03 기준)</h3>
+        <ul>
+          <li>상황: 실수로 EC2 인스턴스를 삭제하더라도 루트 EBS 볼륨의 중요한 데이터가 함께 삭제되지 않게 하려는 경우</li>
+          <li>정답: 루트 볼륨의 DeleteOnTermination 속성을 False로 설정</li>
+        </ul>
+      </div>
+    </section>
+
+    <section 
+      id="lifecycle"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">EC2 인스턴스 수명 주기</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+      <dl class="def">
+        <dt>Pending</dt>
+        <dd>인스턴스 시작을 준비하는 단계입니다. 이후 Running 상태로 바뀝니다.</dd>
+        <dt>Running</dt>
+        <dd>인스턴스가 실행 중인 단계입니다. EC2 컴퓨팅 사용 요금이 발생합니다.</dd>
+        <dt>Stopping</dt>
+        <dd>인스턴스를 중지하는 중입니다. 최대 절전 모드(Hibernation)를 사용 중이면 이 상태에서도 인스턴스 요금이 발생합니다.</dd>
+        <dt>Stopped</dt>
+        <dd>인스턴스 중지가 끝난 단계입니다. 다시 시작할 수 있고, EC2 요금은 부과되지 않지만 EBS 요금은 부과됩니다.</dd>
+        <dt>Shutting-down</dt>
+        <dd>인스턴스를 종료하는 중입니다. 인스턴스 사용 요금 청구가 중단됩니다.</dd>
+        <dt>Terminated</dt>
+        <dd>인스턴스가 영구적으로 종료된 상태입니다. 다시 시작할 수 없고, 기본 설정이면 붙어 있던 루트 EBS 볼륨도 함께 삭제됩니다.</dd>
+      </dl>
+    </section>
+
+    <section 
+      id="actions"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">Stop, Reboot, Terminate, Hibernate</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+      <dl class="def">
+        <dt>Stop / Start(중지 후 다시 시작)</dt>
+        <dd>컴퓨터를 껐다 다시 켜는 것과 비슷합니다. 일반적으로 EBS 데이터는 유지되지만 RAM 내용과 Instance Store 데이터는 유지되지 않습니다. 다시 시작할 때 Elastic IP를 할당하지 않았다면 Public IP 주소가 바뀔 수 있습니다.</dd>
+        <dt>Reboot(재부팅)</dt>
+        <dd>운영체제를 다시 부팅하는 동작입니다. 잠시 재부팅 상태를 거쳐 다시 running 상태로 돌아옵니다. 중지 후 시작과는 다르며, 보통 같은 호스트에서 재부팅해서 Private IP와 Public IP, Instance Store 데이터가 그대로 유지됩니다. 인스턴스 사용 요금도 계속 발생합니다.</dd>
+        <dt>Terminate(종료)</dt>
+        <dd>인스턴스 자체를 폐기하는 동작입니다. 다시 시작할 수 없습니다. EBS 루트 볼륨은 기본적으로 삭제되지만 설정에 따라 유지되게 할 수도 있습니다.</dd>
+        <dt>Hibernate(최대 절전 모드)</dt>
+        <dd>일반 Stop과 달리 RAM 내용을 EBS 루트 볼륨에 저장한 뒤 중지하고, 다시 시작할 때 복원합니다. 일반 Stop은 RAM 내용이 사라집니다. 두 경우 모두 stopped 상태에서는 EC2 인스턴스 사용 요금이 발생하지 않지만 EBS 저장 요금은 발생합니다.</dd>
+      </dl>
+    </section>
+
+    <section 
+      id="placement"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">EC2 배치 그룹(Placement Groups)</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <dl class="def">
+        <dt>Cluster</dt>
+        <dd>
+          <ul>
+            <li>배치 방식: 단일 AZ 안에서 인스턴스들을 물리적으로 서로 가장 가까운 곳에 빽빽하게 모아 배치합니다.</li>
+            <li>장점: 네트워크 지연 시간이 극도로 낮고 네트워크 처리량이 극도로 높습니다.</li>
+            <li>단점: 같은 하드웨어에 장애가 나면 그룹 안의 모든 인스턴스가 한꺼번에 영향을 받습니다(장애 위험이 큼).</li>
+            <li>주요 용도: HPC(High Performance Computing), 빅데이터 수집, 인스턴스 간 초고속 통신이 필수인 워크로드</li>
+          </ul>
+        </dd>
+        <dt>Spread</dt>
+        <dd>
+          <ul>
+            <li>배치 방식: 인스턴스들을 서로 다른 물리적 하드웨어에 하나씩 따로 떨어뜨려 배치합니다.</li>
+            <li>장점: 하드웨어 장애가 나도 다른 인스턴스에 영향을 주지 않아 장애 격리(Fault Tolerance)와 고가용성이 극대화됩니다.</li>
+            <li>제약: AZ당 최대 7개 인스턴스까지만 배치할 수 있습니다.</li>
+            <li>주요 용도: 물리 하드웨어 문제로 같이 죽으면 안 되는 소수의 핵심 인스턴스(메인 DB, 도메인 컨트롤러 등)</li>
+          </ul>
+        </dd>
+        <dt>Partition(파티션 배치 그룹)</dt>
+        <dd>
+          <ul>
+            <li>배치 방식: 배치 그룹을 여러 파티션으로 나누고, 각 파티션은 서로 다른 랙(Rack)을 사용합니다. 인스턴스는 파티션 안에 여러 개 들어갈 수 있습니다.</li>
+            <li>특징: 파티션 A의 랙이 고장 나도 파티션 B, C의 인스턴스는 안전합니다.</li>
+            <li>주요 용도: Hadoop, Cassandra, Kafka 같은 대규모 분산 데이터 처리 시스템</li>
+          </ul>
+        </dd>
+      </dl>
+    </section>
+
+    <section 
+      id="eni"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">ENI, ENA, EFA 비교</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <dl class="def">
+        <dt>ENI(Elastic Network Interface): 기본 가상 랜카드, 모든 인스턴스에서 사용 가능</dt>
+        <dd>
+          <ul>
+            <li>VPC 안에서 EC2 인스턴스에 연결되는 기본 가상 네트워크 인터페이스입니다.</li>
+            <li>구성 요소: 주 Private IP, 보조 Private IP, Public IP(또는 Elastic IP), MAC 주소, 보안 그룹 등</li>
+            <li>EC2 인스턴스 간에 Attach/Detach 할 수 있습니다.</li>
+            <li>듀얼 홈드 서버 구성: 하나의 EC2에 ENI 2개를 붙여 용도별로 네트워크 트래픽을 물리적·논리적으로 분리할 수 있습니다.</li>
+          </ul>
+        </dd>
+        <dt>ENA(Elastic Network Adapter): 고성능 일반 네트워크, 일부 인스턴스에서만 사용 가능</dt>
+        <dd>
+          <ul>
+            <li>높은 네트워크 대역폭, 높은 초당 패킷 처리량, 낮은 지연 시간을 제공하는 향상된 네트워크 어댑터입니다.</li>
+            <li>인스턴스 유형에 따라 최대 200Gbps까지 대폭 향상된 대역폭을 제공합니다.</li>
+            <li>운영체제 커널 수준에서 네트워크 처리를 최적화하며, 일반적인 웹 애플리케이션, 대규모 데이터베이스, 네트워크 I/O가 높은 일반 워크로드에서 씁니다.</li>
+          </ul>
+        </dd>
+        <dt>EFA(Elastic Fabric Adapter): 초저지연 HPC 전용 네트워크, 일부 인스턴스에서만 사용 가능</dt>
+        <dd>
+          <ul>
+            <li>HPC(고성능 연산)와 머신러닝(ML) 학습을 위해 만든 특수 목적용 어댑터입니다.</li>
+            <li>OS 커널 우회: 데이터를 보낼 때 운영체제 커널을 거치지 않고 애플리케이션이 네트워킹 하드웨어와 직접 통신해 지연 시간이 극도로 낮습니다.</li>
+            <li>OS-bypass 특성 때문에 Linux 인스턴스에서만 지원됩니다.</li>
+            <li>OS-bypass 트래픽은 라우팅되지 않아 같은 서브넷 안의 인스턴스 간 연결에서만 동작합니다(인터넷이나 VPC 간 트래픽은 지원하지 않음).</li>
+          </ul>
+        </dd>
+      </dl>
+    </section>
+
+    <section 
+      id="jumbo"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Jumbo Frame</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <ul class="pts">
+        <li>네트워크에서 한 번에 실어 나를 수 있는 패킷의 최대 크기를 크게 늘려 네트워크 처리 효율을 높이는 기술입니다.</li>
+        <li>MTU(Maximum Transmission Unit)는 네트워크로 전송할 수 있는 단일 프레임/패킷의 최대 크기입니다. 표준 Ethernet MTU는 1500Bytes, Jumbo Frames MTU는 9001Bytes(AWS 기준)입니다.</li>
+      </ul>
+      <h3 class="s">왜 사용할까?</h3>
+      <p>15000byte 데이터를 보낸다고 가정합니다.</p>
+      <ul class="pts">
+        <li>표준 프레임: 데이터를 10개로 쪼개 보내야 합니다. 패킷마다 네트워크 헤더(주소, 제어 정보 등)가 붙고 CPU가 패킷을 10번 처리해야 해서 프로세서 부하(Overhead)가 생깁니다.</li>
+        <li>Jumbo Frame: 데이터를 2개의 큰 덩어리로 나눠 보냅니다. 헤더 오버헤드와 CPU 연산 부담이 크게 줄어 전송 성능이 좋아집니다.</li>
+      </ul>
+      <h3 class="s">AWS EC2에서 Jumbo Frame을 쓸 수 있는 조건</h3>
+      <div class="cols">
+        <div>
+          <h3>지원되는 경우</h3>
+          <ul class="pts">
+            <li>같은 VPC 안의 EC2 인스턴스 간 통신</li>
+            <li>같은 리전의 VPC 피어링으로 연결된 VPC 간 통신</li>
+            <li>AWS Direct Connect를 통한 온프레미스와 AWS 전용선 통신</li>
+          </ul>
+        </div>
+        <div>
+          <h3>표준 프레임 등으로 제한되는 경우</h3>
+          <ul class="pts">
+            <li>인터넷 게이트웨이를 거쳐 외부로 나가는 트래픽(1500)</li>
+            <li>VPN 연결(Site-to-Site VPN 등)(1500)</li>
+            <li>AWS 리전 간 트래픽(1500, Transit Gateway를 쓰면 별도 규정)</li>
+            <li>리전 간 VPC 피어링 트래픽(8500)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section 
+      id="ip"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">Public, Private, Elastic IP 주소</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+      <dl class="def">
+        <dt>Public IP</dt>
+        <dd>
+          <ul>
+            <li>인스턴스를 stop하면 반환(release)되어, 다시 시작할 때 다른 IP 주소로 바뀝니다.</li>
+            <li>Public Subnet에서 사용합니다.</li>
+            <li>비용이 발생합니다.</li>
+            <li>인스턴스의 Private IP와 연동됩니다.</li>
+            <li>인스턴스 간에 옮길 수 없습니다.</li>
+          </ul>
+        </dd>
+        <dt>Private IP</dt>
+        <dd>
+          <ul>
+            <li>인스턴스가 stop 상태여도 IP 주소가 유지됩니다.</li>
+            <li>Public Subnet과 Private Subnet 모두에서 사용합니다.</li>
+          </ul>
+        </dd>
+        <dt>Elastic IP</dt>
+        <dd>
+          <ul>
+            <li>고정된(정적) Public IP입니다.</li>
+            <li>비용이 발생합니다.</li>
+            <li>인스턴스의 Private IP와 연동됩니다.</li>
+            <li>인스턴스나 ENI 간에 옮길 수 있습니다.</li>
+          </ul>
+        </dd>
+      </dl>
+    </section>
+
+    <section 
+      id="subnet"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">Public Subnet과 Private Subnet</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+      <dl class="def">
+        <dt>Public Subnet</dt>
+        <dd>라우팅 테이블에 0.0.0.0/0 → IGW(인터넷 게이트웨이) 설정이 있습니다. 인스턴스에 Public IP가 있고 보안 설정이 허용하면 외부 인터넷에서 직접 접근할 수 있습니다.</dd>
+        <dt>Private Subnet</dt>
+        <dd>인터넷 게이트웨이로 통하는 직통 경로가 없습니다. Public IP가 부여되지 않거나 외부에서 직접 인바운드 접근을 할 수 없습니다.</dd>
+      </dl>
+    </section>
+
+    <section 
+      id="bastion"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Bastion Host와 SSM Session Manager</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <h3 class="s">개념과 필요성</h3>
+      <p>프라이빗 서브넷의 서버에는 외부 인터넷에서 직접 SSH/RDP로 접속할 수 없습니다. 그렇다고 관리를 위해 DB 서버에 Public IP를 붙이면 보안에 치명적입니다. 이때 외부 관리자가 프라이빗 서브넷 안의 서버에 안전하게 접속하도록 중간 길목 역할을 하는 전용 EC2 인스턴스가 Bastion Host입니다.</p>
+      <p>인터넷에서 Private Subnet 전체로의 접근을 허용하는 것이 아니라, Bastion Host를 거쳐 허용된 Private 서버에만 관리자가 접근하는 구조입니다.</p>
+      <h3 class="s">구축과 보안 설정 모범 사례</h3>
+      <ul class="pts">
+        <li>위치: 반드시 Public Subnet에 두며 Public IP를 가집니다.</li>
+        <li>Bastion Host의 보안 그룹: Inbound SSH(22) 또는 RDP(3389)를 관리자의 특정 IP 대역만 허용합니다(0.0.0.0/0 전체 허용 금지).</li>
+        <li>Private EC2의 보안 그룹: Inbound SSH(22)를 오직 Bastion Host의 Security Group ID만 허용합니다.</li>
+      </ul>
+      <h3 class="s">현대적 대안: AWS Systems Manager(SSM) Session Manager</h3>
+      <p>최근 시험과 실무에서는 Bastion Host 대신 SSM Session Manager를 쓰는 구조가 점점 널리 쓰입니다.</p>
+      <div class="cols">
+        <div>
+          <h3>Bastion Host의 단점</h3>
+          <ul class="pts">
+            <li>Bastion Host 인스턴스를 직접 유지 관리해야 합니다.</li>
+            <li>Port 22(SSH)를 열어 둬야 해서 관리 부담과 보안 위험이 있습니다.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>SSM Session Manager의 장점</h3>
+          <ul class="pts">
+            <li>Bastion Host가 필요 없습니다.</li>
+            <li>Port 22를 열 필요가 없어 보안 그룹 인바운드 규칙을 0개로 둘 수 있습니다.</li>
+            <li>Public IP 없이도 AWS IAM 권한과 SSM Agent로 웹 콘솔/CLI에서 Private 인스턴스에 바로 터미널로 접속할 수 있습니다.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <p class="group">VPC 네트워킹: NAT와 VPC Endpoint</p>
+
+    <section 
+      id="nat"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">NAT Gateway: 개념과 필요성</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+<h3 class="s">Network Address Translation이 정확히 무슨 뜻인가?</h3>
+<ul class="pts">
+<li>Private IP를 사용하는 인스턴스의 트래픽을 NAT Gateway가 Elastic IP(= 고정 Public IP)를 사용해 인터넷으로 나갈 수 있도록 주소를 변환함
+</li>
+<li>그래서 인터넷에서는 NAT Gateway의 Public IP에서 온 요청처럼 보임
+</li>
+<li>인터넷에서 응답이 돌아오면 NAT Gateway가 다시 Private IP로 변환하여 EC2로 전달함
+</li>
+<li>이 과정이 바로 Network Address Translation
+</li>
+</ul>
+<h3 class="s">NAT Gateway가 왜 필요한가?</h3>
+<ul class="pts">
+<li>Private Subnet의 EC2가 인터넷에서 직접 접근받을 수 없게 만들면서도, EC2가 인터넷 환경에 나가서 패키지를 다운로드하거나 외부 API를 호출하는 것은 허용하고 싶은 상황
+</li>
+<li>NAT가 Private Subnet → Internet 방향의 outbound 통신을 가능하게 해줌
+</li>
+<li>또한 Internet → Private EC2의 연결을 인터넷에서 선제적으로 진행하는 것은 허용하지 않음
+</li>
+</ul>
+<h3 class="s">NAT Gateway와 NAT instance의 중요 포인트</h3>
+<ul class="pts">
+<li>NAT Gateway와 instance가 인터넷으로 바로 연결해주는 것이 아니라, NAT Gateway → Internet Gateway → Internet의 구조 (결국 <strong>Internet으로 연결하는 직접적인 요소는 Internet Gateway</strong>이고, NAT Gateway는 Private IP를 사용하는 리소스가 Internet으로 나갈 수 있도록 NAT를 수행하는 장치)
+</li>
+<li>NAT Gateway와 NAT instance 모두 기본적으로 Public Subnet에 배치(단순히 이름이 Public인 것이 아니라, Route Table에 Internet Gateway로 향하는 경로가 존재하는 Subnet)
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="nat-ha"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">NAT Gateway 고가용성과 Regional NAT Gateway</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<h3 class="s">고가용성 확보와 AZ 장애에 대비한 NAT Gateway 아키텍처</h3>
+<ul class="pts">
+<li>하나의 NAT Gateway를 여러 AZ에서 공유하다가 NAT Gateway가 있는 AZ에 장애가 발생하면 다른 AZ의 리소스들도 인터넷 액세스를 잃을 수 있음
+</li>
+<li>따라서 고가용성과 장애 대비를 원한다면 각각의 AZ에 하나씩 NAT Gateway를 배치하여 하나의 AZ에 장애가 발생했을 때 다른 AZ의 인터넷 액세스에 영향이 없도록 하는 것이 고가용성을 확보하는 아키텍처임(단, 비용적인 측면에서는 더 비쌀 수밖에 없음. 따라서 위의 상황이 아니고, 비용을 최소한으로 사용하기를 원하는 경우에는 하나의 AZ에 NAT Gateway를 배치한 후 공유하는 것이 정답에 가까울 수도 있음)
+</li>
+<li>참고: 2025년 11월 20일부터 NAT Gateway에 리전 가용성 모드(Regional NAT Gateway)가 추가됨
+<ul>
+<li>하나의 NAT Gateway가 워크로드가 있는 여러 AZ로 자동 확장되어, AZ마다 NAT Gateway를 따로 만들 필요가 줄어듦(기존의 AZ 단위 방식은 Zonal NAT Gateway라고 부름)
+</li>
+<li>Regional NAT Gateway는 VPC 수준의 리소스라서 별도의 Public Subnet이 필요하지 않음
+</li>
+<li>단, Private NAT Gateway는 Regional NAT Gateway에서 지원되지 않고 Zonal 모드로만 가능함
+</li>
+</ul>
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="nat-instance"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">NAT Gateway vs NAT Instance</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<ul class="pts">
+<li>NAT Gateway(AWS 관리형 서비스)
+<ul>
+<li>AWS가 관리해주는 NAT 서비스
+</li>
+<li>AWS에게 NAT 기능을 맡김
+</li>
+</ul>
+</li>
+<li>NAT instance (EC2 인스턴스의 일종 - 사용자 관리)
+<ul>
+<li>EC2를 NAT 장비로 사용
+</li>
+<li>내가 EC2를 하나 만들어 NAT의 역할을 부여함
+</li>
+</ul>
+</li>
+<li>AWS 공식 문서에서도 NAT Gateway는 AWS가 제공하는 관리형 NAT 장치, NAT instance는 EC2에서 직접 생성하는 NAT 장치로 설명함. AWS는 일반적으로 NAT Gateway 사용을 권장함
+</li>
+</ul>
+<div class="tbl"><table>
+<caption>NAT Gateway와 NAT Instance 비교</caption>
+<thead><tr><th scope="col">항목</th><th scope="col">NAT Gateway</th><th scope="col">NAT Instance</th></tr></thead><tbody>
+<tr><th scope="row">형태</th><td>AWS 관리형 서비스</td><td>EC2 Instance</td></tr>
+<tr><th scope="row">관리</th><td><strong>AWS가 관리</strong></td><td><strong>사용자가 관리</strong></td></tr>
+<tr><th scope="row">확장성</th><td>높음</td><td>EC2 Instance 크기에 의존</td></tr>
+<tr><th scope="row">가용성</th><td>AZ 안에서는 자동 이중화, AZ 장애 대비는 AZ마다 배치</td><td>직접 구성 필요</td></tr>
+<tr><th scope="row">Security Group</th><td>❌ 연결 불가</td><td>✅ 사용 가능</td></tr>
+<tr><th scope="row">Port Forwarding</th><td>❌</td><td>✅ 가능</td></tr>
+<tr><th scope="row">Bastion Host</th><td>❌</td><td>✅ 가능</td></tr>
+<tr><th scope="row">유지보수</th><td>거의 없음</td><td>OS 패치 등 직접 관리</td></tr>
+<tr><th scope="row">일반적인 권장</th><td><strong>NAT Gateway</strong></td><td>특수한 경우</td></tr>
+</tbody></table></div>
+<h3 class="s">NAT instance의 작동 방식</h3>
+<ul class="pts">
+<li>Public Subnet에 EC2를 하나 배치
+</li>
+<li>Private EC2의 Route Table: 0.0.0.0/0 → NAT instance
+</li>
+<li>NAT instance의 Route Table: 0.0.0.0/0 → Internet Gateway
+</li>
+<li>NAT Instance 자체는 인터넷에 접근할 수 있어야하므로 Public Subnet에 있어야하고 Public IP 또는 Elastic IP가 필요
+</li>
+</ul>
+<h3 class="s">왜 NAT instance를 사용하는가?</h3>
+<ul class="pts">
+<li>EC2의 특성상 여러 관리 책임을 사용자가 가지게 됨.
+</li>
+<li>이는 운영 부담을 늘리지만, <strong>그만큼 사용자가 제어할 수 있는 영역도 많아지게 됨</strong>.
+</li>
+<li>따라서 특정 네트워크 트래픽을 세밀하게 제어하길 원하거나 사용자 지정 구성, Bastion Host 역할 동시 수행 등을 원하는 경우 NAT instance를 사용하는 것이 더 유리할 수 있음(단, EC2에 NAT와 Bastion Host를 같이 사용하는 것이 일반적인 구조인 것은 아님)
+</li>
+</ul>
+<h3 class="s">NAT instance와 Bastion Host의 차이점</h3>
+<ul class="pts">
+<li>두 서비스 모두 EC2 인스턴스를 활용하며, 사용자가 대부분의 관리 책임을 가진다는 공통점이 있음
+</li>
+<li>NAT instance는 Private Subnet에 있는 EC2로부터 인터넷으로 향하는 Outbound 통신을 가능하게 하는 역할이고, Bastion Host는 외부의 관리자가 Private EC2에 관리 목적으로 접근(Inbound)할 수 있는 진입점 역할을 함.
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="vpc-endpoint"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">NAT Gateway vs VPC Endpoint</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<ul class="pts">
+<li>한 줄로 요약하자면, <strong>프라이빗 서브넷을 인터넷에 연결하려면 NAT Gateway</strong>, <strong>다른 AWS 서비스 및 PrivateLink 기반 서비스에 연결하려면 VPC Endpoint(without internet)</strong>
+</li>
+<li>NAT Gateway: Private Subnet → 인터넷
+</li>
+<li>VPC Endpoint: Private Subnet → AWS 서비스
+</li>
+<li>상황: Private Subnet에 있는 EC2가 인터넷에 있는 GitHub에서 파일을 다운로드해야한다 → NAT Gateway
+</li>
+<li>상황: Private Subnet에 있는 EC2가 S3에 파일을 업로드해야 한다 → VPC Endpoint
+</li>
+</ul>
+<h3 class="s">왜 VPC Endpoint를 사용하는가?</h3>
+<ul class="pts">
+<li>가장 중요한 이유는 <strong>인터넷을 거칠 필요가 없기 때문</strong>
+</li>
+<li>만약 Private EC2가 S3에 접근한다고 할 때, NAT Gateway를 사용하면 NAT Gateway 비용과 데이터 처리 비용 등이 발생할 수 있음(단, 항상 VPC Endpoint가 더 저렴한 것은 아님, 상황에 따라 비용은 역전될 수 있음)
+</li>
+<li>반면에 VPC Endpoint를 활용하면 AWS 서비스로 VPC 내부에서 직접 연결할 수 있음
+</li>
+</ul>
+<p>VPC Endpoint와 NAT Gateway는 역할이 다른만큼 양립가능한 두 서비스임. 즉, 인터넷 접근과 동시에 S3 등의 AWS 서비스에 접근해야하는 경우 두 방식을 모두 사용할 수 있음.</p>
+<h3 class="s">VPC Endpoint의 종류</h3>
+<ol class="pts">
+<li>Gateway Endpoint
+<ul>
+<li><strong>S3, DynamoDB</strong>로의 접근을 원한다면 Gateway Endpoint
+</li>
+<li>Route Table에 S3/DynamoDB로의 경로를 추가
+</li>
+</ul>
+</li>
+<li>Interface Endpoint
+<ul>
+<li>AWS PrivateLink를 기반으로 함. 대부분의 AWS 서비스/PrivateLink 지원 서비스로의 접근을 원한다면 Interface Endpoint
+</li>
+<li><strong>ENI를 생성</strong>함(시험에서 Endpoint가 ENI를 생성한다는 표현이 나오면 Interface Endpoint 떠올리기)
+</li>
+</ul>
+</li>
+</ol>
+    </section>
+
+    <section 
+      id="private-nat"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Private NAT Gateway</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<ul class="pts">
+<li>NAT Gateway는 default로 Public Subnet에 위치하지만, Private Subnet에 배치되는 경우도 있음
+</li>
+</ul>
+<h3 class="s">Private NAT Gateway가 가지는 차이점</h3>
+<ol class="pts">
+<li>Private Subnet에 배치
+</li>
+<li>인터넷으로 직접 나가는 데 사용하지 않음
+</li>
+<li>다른 VPC나 온프레미스 네트워크 등으로 나가는 트래픽의 IP를 변환하는 데 사용
+</li>
+<li>주로 Transit Gateway 또는 Virtual Private Gateway를 통한 연결과 함께 사용
+</li>
+</ol>
+<ul class="pts">
+<li>즉, 인터넷 연결용이 아닌, 사설 네트워크 간 통신에서 주소를 변환하는 용도
+</li>
+<li>Private NAT Gateway가 왜 필요한가?
+<ul>
+<li>서로 다른 VPC나 사내 네트워크 간 통신에 주로 사용됨. 특히 네트워크 IP 주소가 겹치거나, 상대방에게 내부 EC2의 실제 IP를 노출하고 싶지 않을 경우 유용함.
+</li>
+</ul>
+</li>
+<li>주소 변환 및 연결 방법
+<ul>
+<li>VPC → Private NAT Gateway(출발지 IP를 NAT Gateway의 사설 IP로 변환) → Transit Gateway or VPN 연결 → 사내 네트워크 연결
+</li>
+</ul>
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="nat-summary"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">NAT와 Endpoint 핵심 요약</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<h3 class="s">최종 핵심 암기</h3>
+<div class="tbl"><table>
+<thead><tr><th scope="col">서비스</th><th scope="col">특징</th><th scope="col">연결 방향</th></tr></thead><tbody>
+<tr><th scope="row">NAT Gateway</th><td>AWS 관리형 NAT</td><td>Private → Internet</td></tr>
+<tr><th scope="row">NAT Instance</th><td>EC2 기반 NAT</td><td>Private → Internet</td></tr>
+<tr><th scope="row">VPC Gateway Endpoint</th><td>S3, DynamoDB로의 접근</td><td>Private → S3 / DynamoDB</td></tr>
+<tr><th scope="row">VPC Interface Endpoint</th><td>PrivateLink 기반, ENI 생성</td><td>Private → AWS Service / PrivateLink</td></tr>
+<tr><th scope="row">Bastion Host</th><td>관리 목적의 접속 진입점</td><td>Administrator → Private EC2</td></tr>
+<tr><th scope="row">Internet Gateway</th><td>VPC와 인터넷 사이의 연결 통로</td><td>VPC ↔ Internet</td></tr>
+</tbody></table></div>
+<h3 class="s">Route Table 연결</h3>
+<p>Route Table은 목적지에 따라 다음에 어디로 보낼지를 결정하는 길 안내표입니다.</p>
+<div class="flow" role="group" aria-label="Route Table에서 목적지별 연결 경로">
+  <div class="top"><span class="box key">Route Table</span></div>
+  <div class="arr top" aria-hidden="true">↓</div>
+  <div class="cols3">
+    <div class="col"><span class="box">Private Subnet</span><span class="arr" aria-hidden="true">↓</span><span class="box">NAT Gateway</span><span class="arr" aria-hidden="true">↓</span><span class="box">Internet Gateway</span><span class="arr" aria-hidden="true">↓</span><span class="box">Internet</span></div>
+    <div class="col"><span class="box">S3 / DynamoDB</span><span class="arr" aria-hidden="true">↓</span><span class="box">Gateway Endpoint</span></div>
+    <div class="col"><span class="box">AWS Service</span><span class="arr" aria-hidden="true">↓</span><span class="box">Interface Endpoint</span></div>
+  </div>
+</div>
+<ul class="pts">
+<li>참고: 위 그림은 개념을 단순화한 것임
+<ul>
+<li>Route Table에 경로를 추가하는 방식은 Gateway Endpoint(S3/DynamoDB)임. Interface Endpoint는 Route Table에 경로를 추가하지 않고, 서브넷에 만들어진 ENI의 사설 IP로 연결됨
+</li>
+<li>NAT Gateway는 Public Subnet에 있으며, 그 Public Subnet의 Route Table이 Internet Gateway로 향함
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="s">요약</h3>
+<ul class="pts">
+<li>Public NAT Gateway: Private EC2 → 인터넷
+</li>
+<li>Private NAT Gateway: Private EC2 → VPC, 타 사설 네트워크
+</li>
+<li>Internet Gateway: VPC와 인터넷 사이의 연결 통로
+</li>
+<li>VPC Endpoint: VPC에서 지원되는 AWS 서비스로 사설 연결
+</li>
+</ul>
+    </section>
+
+    <p class="group">ELB와 Auto Scaling</p>
+
+    <section 
+      id="scale"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">Scale Up과 Scale Out</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+<h3 class="s">Scale Up: 수직적 향상 / 성능 향상</h3>
+<ul class="pts">
+<li>인스턴스의 유형/성능 변경, CPU/메모리 증가
+</li>
+<li>일반적으로 인스턴스 유형 변경 시 중지/변경/재시작이 필요할 수 있음
+</li>
+<li>단일 서버의 성능 한계가 존재
+</li>
+</ul>
+<h3 class="s">Scale Out: 수평적 향상 / 개수 늘리기</h3>
+<ul class="pts">
+<li>실행 중인 인스턴스의 수 늘리기
+</li>
+<li>ELB를 통해 트래픽 분산 가능
+</li>
+<li>Auto Scaling으로 인스턴스 수 자동 조절 가능
+</li>
+<li>인스턴스들을 여러 AZ에 분산시켜 가용성 향상 가능
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="stateless"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Stateless와 Stateful</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<h3 class="s">Stateless vs Stateful</h3>
+<ul class="pts">
+<li>Stateless = 무상태: 각 요청을 처리할 때 서버 자체에 저장된 이전 요청의 상태에 의존하지 않음
+<ul>
+<li>요청마다 필요한 정보를 함께 전달하거나 <strong>외부 저장소에서 조회</strong>
+</li>
+<li>어떤 서버가 요청을 처리하더라도 동일한 처리가 가능하도록 설계
+</li>
+<li>서버 추가/제거가 상대적으로 쉬움
+</li>
+</ul>
+</li>
+<li>Stateful = 상태 유지: 서버가 이전 요청에서 생성된 상태 정보를 보관하고, 이후 요청에서 이를 활용
+<ul>
+<li>서버 메모리에 로그인 세션이나 진행 상태가 저장됨
+</li>
+<li>다음 요청이 다른 서버로 전달되면 상태 정보가 없을 수 있음
+</li>
+<li>상태 공유/동기화 또는 세션 고정 같은 추가 설계가 필요할 수 있음
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="s">Stateless + Scale Out</h3>
+<ul class="pts">
+<li>Stateful 중심 설계: 특정 서버에 상태가 종속됨 → 만약 요청이 A 서버에 의존하고 있다면, 해당 요청을 B가 처리하기 위해 세션 공유, 세션 고정 등의 추가 조치가 필요함. 또한 A 서버가 종료되면 메모리에만 있던 상태가 사라질 가능성 존재
+</li>
+<li>Stateless 중심 설계: 상태가 서버 외부에서 관리됨
+<ul>
+<li>Auto Scaling으로 EC2를 추가하거나 제거해도 상태 정보가 특정 인스턴스 메모리에만 묶여있지 않으므로 확장과 교체가 쉬워짐(필요한 정보가 특정 서버에 종속되어있지 않으므로 관리에 용이)
+</li>
+<li>장점들
+<ol>
+<li>수평 확장 용이: 새 인스턴스를 추가해도 특정 서버의 세션을 복사할 필요가 줄어듦
+</li>
+<li>장애 복구 용이: 서버가 종료되더라도 외부에 저장된 상태 정보는 유지됨
+</li>
+<li>로드 밸런싱 용이: ELB가 요청을 여러 서버에 분산하기 쉬움
+</li>
+<li>자동화에 적합: Auto Scaling이 인스턴스를 추가하거나 제거하기 편리함
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="asg"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">Amazon EC2 Auto Scaling 기본 구조</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+<h3 class="s">기본 구조</h3>
+<ul class="pts">
+<li>사용자 요청 → ELB(요청을 정상적인 인스턴스들에게 분산) → Auto Scaling Group(최소/목표/최대 용량과 헬스 체크를 관리)
+<ol>
+<li>Auto Scaling Group(ASG): 인스턴스 수와 배포 범위 관리
+</li>
+<li>Scaling Policies: 언제, 얼마나 확장/축소할지 결정 → 인스턴스가 더 필요한가?
+</li>
+<li>Health Checks: 인스턴스가 정상인지 판단하고 교체할지 결정 → 현재 인스턴스가 정상인가?
+</li>
+<li>Health Check Grace Period: 새 인스턴스가 정상화될 시간 보장 → 새 인스턴스가 정상 상태에 도달할 때 까지 기다릴 필요가 있는가?
+</li>
+</ol>
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="asg-health"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Health Checks와 Grace Period</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<h3 class="s">Health Checks: 어떤 상태를 확인하는가?</h3>
+<ul class="pts">
+<li>EC2 Status Checks: EC2 인스턴스와 이를 실행하는 기반 시스템에 문제가 있는가?
+<ol>
+<li>System Status Check
+<ul>
+<li>AWS가 관리하는 기반 인프라에 문제가 있는지 확인 ex. 물리적 호스트, 네트워크 또는 전원과 같은 AWS 측 기반 시스템 문제가 원인이 될 수 있음
+</li>
+</ul>
+</li>
+<li>Instance Status Check
+<ul>
+<li>EC2 인스턴스 자체의 운영 상태 확인 ex. 운영체제 부팅 문제, 네트워크 설정 문제 또는 메모리/파일 시스템 관련 문제 등이 원인이 될 수 있음
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>ELB Health Checks: 로드밸런서가 등록된 대상에 요청을 보내도 되는지 판단하기 위한 검사
+<ul>
+<li>ELB가 인스턴스를 비정상으로 판단했다고 해서 Auto Scaling이 반드시 그 인스턴스를 교체하는 것은 아님
+<ul>
+<li>ELB는 비정상 대상을 일반적인 트래픽 분산에서 제외할 수 있음
+</li>
+<li>ASG는 기본적으로 ELB 상태 검사 결과를 무시함
+</li>
+<li>ASG에서 ELB Health Checks를 활성화했다면, ELB가 비정상적으로 판단한 인스턴스를 ASG도 비정상으로 판정하고 교체할 수 있음
+</li>
+<li>즉, ELB의 트래픽 분산과 ASG의 인스턴스 교체 판단은 구분해야 함
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="s">Health Check Grace Period(유예 기간)</h3>
+<ul class="pts">
+<li>새 인스턴스가 InService 상태에 들어간 뒤, 상태 검사 실패만으로 너무 일찍 교체되지 않도록 ASG가 기다리는 최소 시간
+</li>
+<li>ex. Grace Period - 120 sec
+<ol>
+<li>EC2 시작 - 인스턴스가 실행되고 애플리케이션이 초기화되기 시작함
+</li>
+<li>초기화 중 - 아직 애플리케이션이 준비되지 않았다면 /health 요청에 정상 응답하지 못할 수 있음. 따라서 ELB는 대상이 비정상이라고 판단할 수 있음
+</li>
+<li>Grace Period 중 조기 교체 방지 - ASG는 유예 기간을 적용해 새 인스턴스를 성급하게 Unhealthy로 표시하고 교체하지 않도록 함
+</li>
+<li>120초 경과 - 여전히 상태 검사에 실패하면 ASG가 인스턴스를 비정상이라고 판단하고 교체할 수 있음
+</li>
+</ol>
+<ul>
+<li>유예기간이 EC2의 실제 실행 중단까지 무시하는 것은 아님. 유예 기간 중 더 이상 EC2가 running 상태가 아니라는 것이 감지되면 ASG는 즉시 해당 인스턴스를 비정상으로 표시하고 교체할 수 있음
+</li>
+<li>Grace Period는 길수록 좋은가? → X
+<ul>
+<li>너무 짧으면: 애플리케이션 초기화가 끝나기 전에 인스턴스가 반복적으로 교체될 수 있음
+</li>
+<li>너무 길면: 실제로 고장 난 인스턴스의 교체가 늦어질 수 있음
+</li>
+<li>따라서 인스턴스 부팅, 애플리케이션 초기화 및 ELB 헬스 체크 통과에 필요한 시간을 고려해 시간을 설정해야 함(AWS 문서 기준 콘솔 생성 시 Default 300sec / CLI or SDK 생성 시 Default 0sec)
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Grace Period vs Instance Warmup
+<ul>
+<li>Instance Warmup: 새 인스턴스가 충분히 준비되기 전의 지표가 확장 정책의 판단을 왜곡하지 않도록 함
+</li>
+<li>Grace Period: 새 인스턴스가 초기화 중일 때 너무 빨리 비정상 판정을 받고 교체되는 것을 방지
+</li>
+</ul>
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="asg-policy"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Auto Scaling 유형과 Scaling Policy</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<h3 class="s">Auto Scaling Types</h3>
+<ol class="pts">
+<li>Dynamic Scaling(동적 확장)
+<ul>
+<li>현재의 트래픽이나 CloudWatch 지표에 따라 용량 조절
+</li>
+<li>현재 부하에 반응해야 하는 상황에 적합
+<ul>
+<li>3가지 유형
+<ol>
+<li>Target Tracking: 지표를 목표값에 가깝게 유지하도록 자동 조절(ex. CPU 평균 50% 유지, 대상당 요청 수 유지)
+</li>
+<li>Step Scaling: 경보 위반 정도에 따라 조정 규모를 다르게 설정(ex. CPU가 목표를 얼마나 초과했는지에 따라 서로 다른 규모로 확장)
+</li>
+<li>Simple Scaling: 단일 조정 기준으로 용량 변경, 조정 후 쿨다운 적용(ex. 단순한 한 단계 조정과 Cool Down)
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Scheduled Scaling(예약 확장)
+<ul>
+<li>미리 지정한 날짜와 시간에 용량을 조절
+</li>
+</ul>
+</li>
+<li>Predictive Scaling(예측 확장)
+<ul>
+<li>과거의 사용 패턴을 분석해 미래 수요를 예측하고, 수요가 늘기 전에 용량 준비
+</li>
+</ul>
+</li>
+<li>Manual Scaling(수동 조절)
+<ul>
+<li>관리자가 ASG의 Desired Capacity를 직접 변경
+</li>
+<li>자동 확장 정책이 아닌 관리자의 직접적인 용량 변경이 필요한 상황에 사용
+</li>
+</ul>
+</li>
+</ol>
+<h3 class="s">Scaling Policy</h3>
+<ul class="pts">
+<li>Dynamic Scaling
+<ol>
+<li><strong>Target Tracking Scaling</strong> - 대상 추적 조정
+<ul>
+<li>목표 지표를 설정하면 ASG가 해당 목표에 가까워지도록 인스턴스 수를 자동 조절
+</li>
+<li>ex. 평균 CPU 사용률을 약 50%로 유지하거나, 대상 당 요청 수를 일정 수준으로 유지
+</li>
+<li>모든 조정 단계를 직접 정의하지 않아도 되어 편리함(ex. 70%를 넘으면 1대 추가, 90%를 넘으면 3대 추가 → 이처럼 하나하나 지정해주지 않아도 Auto Scaling이 CloudWatch 경보를 관리하고 필요한 조정을 수행함)
+</li>
+</ul>
+</li>
+<li>Step Scaling - 단계별 조정
+<ul>
+<li>지표가 임계값을 얼마나 초과했는지에 따라 서로 다른 규모로 조정
+</li>
+<li>ex. CPU가 기준을 조금 초과하면 1대 추가, 훨씬 많이 초과하면 3대 추가
+</li>
+</ul>
+</li>
+<li>Simple Scaling - 단순 조정
+<ul>
+<li>CloudWatch 경보가 발생하면 미리 지정한 하나의 조정 작업을 실행
+</li>
+<li>ex. CPU가 임계값을 초과하면 2대 추가, 이후에는 쿨다운 기간동안 추가 조정 제한
+</li>
+<li>Step Scaling보다 조정 규칙이 단순하며, AWS는 일반적으로 Target Tracking 또는 Step Scaling을 권장함
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Scheduled Scaling - 예약 조정
+<ul>
+<li>미리 정한 날짜와 시간에 ASG의 용량을 조정
+</li>
+<li>ex. 매일 오전 8시 전에 인스턴스 수를 늘리고, 야간에는 줄임
+</li>
+<li>실시간 지표가 아니라 시간을 기준으로 동작
+</li>
+</ul>
+</li>
+<li>Predictive Scaling - 예측 조정
+<ul>
+<li>과거의 부하 패턴을 분석해 앞으로 필요할 용량을 예측하고 미리 준비
+</li>
+<li>ex. 평일 오전마다 트래픽이 급증하는 서비스에서 수요가 늘기 전에 인스턴스를 준비
+</li>
+<li>실제 부하가 높아진 뒤 반응하는 것만이 아니라, 예상되는 부하에 선제적으로 대응
+</li>
+</ul>
+</li>
+</ul>
+<div class="note"><p>Auto Scaling Types와 Scaling Policies는 서로 완전히 독립적인 개념이 아니라, Auto Scaling을 서로 다른 관점에서 분류한 것. 그래서 이름이 겹치는 항목은 이름만 같은 별개의 요소가 아니라 서로 같은 요소임</p></div>
+    </section>
+
+    <section 
+      id="asg-concepts"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Auto Scaling 함께 알아둘 개념</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<ol class="pts">
+<li>Minimum, Desired, Maximum Capacity
+<ul>
+<li>Min = 2, Desired = 3, Max = 8이라면 일반적으로 인스턴스 3대를 목표로 운영하며, 자동 확장 시 최대 8대까지 늘어날 수 있음
+</li>
+<li>Min = 최소 용량
+</li>
+<li>Desired = 목표 용량
+</li>
+<li>Max = 최대 용량
+</li>
+</ul>
+</li>
+<li>Cooldown과 Warmup의 차이
+<ul>
+<li>Cooldown = 단순 확장 정책에서 조정 직후 추가 조정을 제한하는 시간
+</li>
+<li>Instance Warmup = 새 인스턴스가 준비되는 동안 지표 집계 및 확장 판단에 미치는 영향 조절
+</li>
+<li>Grace Period = 초기화 중인 인스턴스가 헬스 체크 실패로 조기에 교체되지 않도록 하는 시간
+</li>
+</ul>
+</li>
+<li>Lifecycle Hooks
+<ul>
+<li>인스턴스가 시작되거나 종료되는 과정에서 사용자 정의 작업을 수행할 시간 제공
+</li>
+<li>ex. 인스턴스 시작 시 애플리케이션 설치와 초기화를 완료한 뒤 서비스에 투입하거나, 종료 전에 로그를 저장하고 작업을 정리하도록 할 수 있음.
+</li>
+</ul>
+</li>
+<li>Instance Refresh
+<ul>
+<li>Launch Template나 AMI를 업데이트한 뒤 ASG의 기존 인스턴스를 순차적으로 교체할 때 사용하는 기능.
+</li>
+<li>애플리케이션 버전이나 운영체제 이미지를 업데이트하면서 한꺼번에 모든 인스턴스를 교체하는 위험을 줄이는 데 유용
+</li>
+</ul>
+</li>
+</ol>
+    </section>
+
+    <section 
+      id="ha"
+      data-domain="1"
+      data-level="basic"
+    >
+      <h2 class="t">고가용성, 내결함성, 내구성</h2>
+      <p class="tag d1">도메인 1 클라우드 개념</p>
+<ul class="pts">
+<li>High Availability: 장애가 발생하더라도 서비스를 계속 이용할 수 있도록 설계하는 것
+</li>
+<li>Fault Tolerance: 구성 요소에 장애가 발생해도 서비스 중단이나 기능 저하를 최소화하며 계속 동작하도록 설계하는 것. 엄밀한 의미에서는 장애가 발생해도 서비스가 중단되지 않는 수준을 의미함
+</li>
+<li>Availability: 서비스나 데이터에 필요할 때 접근하고 사용할 수 있는 정도
+</li>
+<li>Durability: 저장한 데이터가 손실되지 않고 보존될 가능성 또는 데이터 보존의 신뢰성
+</li>
+<li>High Availability와 Fault Tolerance의 차이
+<ul>
+<li>High Availability: 장애를 견디고 빠르게 복구
+<ul>
+<li>장애 가능성을 완전히 제거하기보다는, 장애가 발생해도 서비스를 이용할 수 있는 상태를 유지하거나 빠르게 복구하도록 설계하는 데 초점
+</li>
+<li>Multi-AZ를 통해 고가용성을 높일 수 있음. 단, 장애 감지, 트래픽 전환, 인스턴스 교체 등의 과정에서 일시적인 중단이나 지연이 발생할 수 있음
+</li>
+</ul>
+</li>
+<li>Fault Tolerance: 장애가 발생해도 계속 동작
+<ul>
+<li>구성 요소가 고장나더라도 서비스가 중단되지 않도록 하는데 초점
+</li>
+<li>요청을 처리하는 구성 요소 하나가 실패해도 다른 구성 요소가 즉시 처리를 이어받고, 사용자 입장에서 서비스 중단이 발생하지 않도록 설계
+</li>
+<li>Multi-AZ를 구성했다고 Fault Tolerance가 보장되는 것은 아님. 장애 전환이 얼마나 빠른지, 데이터가 일관되게 유지되는지, 의존 서비스도 정상인지에 따라 결과가 달라짐
+</li>
+</ul>
+</li>
+<li>판단 기준
+<ul>
+<li>High Availability: 장애 발생 후 자동 복구, 서비스 중단 최소화, 다른 AZ로 전환 강조
+</li>
+<li>Fault Tolerance: 구성 요소 하나가 고장 나더라도 서비스가 중단되지 않아야 함 강조
+</li>
+</ul>
+</li>
+<li>RTO / RPO
+<ul>
+<li>RTO(Recovery Time Objective): 장애 발생 후 서비스를 복구하기까지 허용되는 목표 시간
+</li>
+<li>RPO(Recovery Point Objective): 장애 발생 시 허용할 수 있는 데이터 손실의 시간 범위
+</li>
+</ul>
+</li>
+<li>Availability와 Durability의 차이
+<ul>
+<li>Availability: 데이터에 접근할 수 있는가?
+<ul>
+<li>필요한 시점에 데이터나 서비스를 사용할 수 있는 정도
+</li>
+<li>만약 중요한 파일이 S3에 저장되어 있는데, S3에 장애가 발생해 해당 파일을 일시적으로 읽을 수 없다면, 파일 자체가 삭제되지 않았더라도 그 시점의 가용성은 낮아진 것
+</li>
+</ul>
+</li>
+<li>Durability: 데이터가 손실되지 않고 보존되는가?
+<ul>
+<li>저장된 데이터가 손실되지 않고 보존되는 정도
+</li>
+<li>파일을 저장한 뒤 서비스에 일시적인 접근 장애가 발생했더라도 파일이 그대로 보존되어 있다면 내구성은 유지된 것
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="elb"
+      data-domain="3"
+      data-level="basic"
+    >
+      <h2 class="t">ELB(Elastic Load Balancer)와 로드 밸런서 종류</h2>
+      <p class="tag d3">도메인 3 클라우드 기술 및 서비스</p>
+<ul class="pts">
+<li>들어오는 트래픽을 여러 대상에 분산하여 애플리케이션의 가용성, 확장성, 안정성을 높이는 AWS 서비스
+</li>
+<li>많은 수의 트래픽이 몰려올 때, ELB가 없다면 특정 서버에 요청이 집중될 수 있음
+</li>
+<li>ELB를 통해 여러 서버로 요청을 분산할 수 있고 특정 서버가 비정상 상태인 경우 ELB는 해당 서버를 정상 대상으로 취급하지 않고 트래픽을 다른 정상 대상으로 보낼 수 있음
+</li>
+<li>ELB와 함께 알아야 할 개념
+<ul>
+<li>Target Group: 트래픽을 전달할 대상과 상태 확인 설정을 관리
+</li>
+<li>Health Check: 대상이 정상적으로 요청을 처리할 수 있는지 확인
+</li>
+<li>EC2 Auto Scaling: 필요에 따라 <strong>EC2 인스턴스 수</strong>를 조정
+</li>
+<li>Amazon CloudWatch: 지표와 경보를 통해 모니터링 및 자동화 지원
+</li>
+<li>→ ELB와 Auto Scaling은 상호 보완적. ELB가 트래픽을 분배하고, Auto Scaling이 서버 수를 조절하면 트래픽 증가에 대응하는 확장 가능한 구조 형성 가능
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="s">ALB, NLB, GWLB</h3>
+<ul class="pts">
+<li>ALB(Application Load Balancer / Layer 7 / 응용 계층)
+<ul>
+<li>HTTP 요청의 경로, 도메인, 헤더 등 애플리케이션 내용을 분석해 라우팅
+</li>
+</ul>
+</li>
+<li>NLB(Network Load Balancer / Layer 4 / 전송 계층)
+<ul>
+<li>TCP, UDP, TLS 등의 연결과 네트워크 정보를 바탕으로 트래픽 전달
+</li>
+</ul>
+</li>
+<li>GWLB(Gateway Load Balancer / Layer 3 / IP 패킷)
+<ul>
+<li>네트워크 트래픽을 방화벽이나 침입 탐지/방지 장비 같은 가상 네트워크 어플라이언스로 전달하고 분산
+</li>
+</ul>
+</li>
+<li>즉, ALB와 NLB는 주로 애플리케이션 트래픽을 대상 서버에 분배하고, GWLB는 네트워크 트래픽을 보안/네트워크 장비에 투명하게 전달하는 데 집중
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="lb-detail"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">ALB, NLB, GWLB (Detailed Ver.)</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<h3 class="s">Application Load Balancer(ALB)</h3>
+<ul class="pts">
+<li>핵심 기능: 콘텐츠 기반 라우팅
+</li>
+<li>ex. 사용자 → ALB, 하나의 도메인으로 접속
+</li>
+<li>요청 내용에 따른 라우팅 규칙:
+<ol>
+<li>이미지 서비스 - Target Group A
+</li>
+<li>주문 서비스 - Target Group B
+</li>
+<li>API 서비스 - Target Group C
+</li>
+<li>그 외 요청 - Default Action
+</li>
+</ol>
+</li>
+<li>ALB는 다음과 같은 조건 활용 가능
+<ul>
+<li>Path-based routing: URL 경로에 따라 분배 ex. /api/*, /images/*
+</li>
+<li>Host-based routing: 도메인 이름에 따라 분배 ex. shop.example.com, api.example.com
+</li>
+<li>HTTP 헤더/메서드/쿼리 문자열 기반 라우팅: 요청 헤더, HTTP 메서드, 쿼리 문자열 등의 조건을 활용
+</li>
+<li>Source IP 기반 규칙: 요청 출발지 IP를 조건으로 사용 가능
+</li>
+<li>Listener, Listener Rule, Target Group
+<ul>
+<li>Listener: 어떤 프로토콜과 포트로 요청을 받을지 정의
+</li>
+<li>Listener Rule: 요청을 어디로 보낼지 결정하는 조건과 동작
+</li>
+<li>Target Group: 요청을 전달할 대상과 상태 확인 설정 관리
+</li>
+</ul>
+</li>
+<li>요청 흐름 요약
+<ul>
+<li>Client → Listener → Listener Rule → Target Group → 대상 서버
+</li>
+</ul>
+</li>
+<li>ALB 용례
+<ul>
+<li>일반적인 웹사이트나 웹 API
+</li>
+<li>HTTP 요청을 URL 경로에 따라 <strong>서로 다른 서비스로 전달</strong>
+</li>
+<li>여러 도메인을 하나의 로드 밸런서로 처리
+</li>
+<li>마이크로서비스 또는 컨테이너 기반 웹 애플리케이션
+</li>
+<li>HTTP 수준의 라우팅 및 기능이 필요한 경우
+</li>
+</ul>
+</li>
+<li>ALB Key Words
+<ul>
+<li>path-based routing, host-based routing, HTTP header, HTTP/HTTPS, Layer 7
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="s">Network Load Balancer(NLB)</h3>
+<ul class="pts">
+<li>HTTP 요청의 URL 내용을 분석하는 대신 네트워크 연결과 프로토콜 정보를 바탕으로 트래픽을 분산
+</li>
+<li>핵심 특징
+<ol>
+<li>높은 처리량과 낮은 지연 시간: 대량의 연결과 높은 성능이 필요한 워크로드에 적합 ex. 게임 서버, 실시간 통신, TCP 기반 서비스
+</li>
+<li>가용 영역별 고정 IP 주소: NLB는 가용 영역별로 고정 IP를 제공할 수 있으며, 필요하면 각 가용 영역에 Elastic IP를 연결할 수도 있음
+</li>
+<li>클라이언트 원본 IP 보존: 구성에 따라 클라이언트의 원본 IP를 백엔드 대상에서 확인할 수 있도록 지원
+</li>
+<li>TCP, UDP, TLS 처리
+<ul>
+<li>TCP 기반의 자체 프로토콜 서버
+</li>
+<li>UDP 기반 서비스
+</li>
+<li>TLS 연결을 NLB에서 종료하는 구성
+</li>
+<li>TCP Listener를 통해 TLS 트래픽을 암호화 상태로 전달하는 구성
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>NLB Key Words
+<ul>
+<li>Static IP, TCP/UDP, Low latency
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="s">Gateway Load Balancer(GWLB)</h3>
+<ul class="pts">
+<li>단순히 웹 서버나 애플리케이션 서버에 요청을 분산하는 것이 아니라, 방화벽이나 침입 탐지/방지 시스템 같은 가상 장비를 트래픽 경로에 배치하고 확장하는 데 사용
+</li>
+<li>GWLB가 필요한 이유
+<ul>
+<li>일반적인 구조에서 방화벽을 여러 대 운영해야 대량의 트래픽 처리가 원활함. 그러나 방화벽을 여러 대 운영할 경우 어떤 트래픽을 어느 장비로 보낼지, 동일한 통신 흐름이 같은 장비를 거치도록 어떻게 관리할지 등의 문제가 생김 → 이런 문제를 해결해주는게 바로 GWLB
+</li>
+<li>여러 가상 어플라이언스에 트래픽을 분산하며, 동일한 흐름의 패킷을 일관되게 같은 대상으로 전달함
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="s">ALB와 NLB의 배치</h3>
+<ul class="pts">
+<li>ALB 배치 방식(트래픽 분산 기준, 네트워크상에서의 위치)
+<ul>
+<li>Layer 7에서 동작, HTTP/HTTPS 요청을 분석해 적절한 Target Group으로 전달
+</li>
+<li>요청의 내용을 읽고 판단할 수 있기 때문에 웹 애플리케이션이나 마이크로서비스를 운영할 때 유용
+</li>
+</ul>
+</li>
+<li>NLB 배치 방식(트래픽 분산 기준, 네트워크상에서의 위치)
+<ul>
+<li>Layer 4에서 동작, 주로 TCP, UDP, TLS 연결을 기준으로 트래픽 전달
+</li>
+<li>ALB처럼 URL 경로나 HTTP 헤더를 해석해 라우팅하지는 않음
+</li>
+<li>주요 특징
+<ul>
+<li>매우 높은 처리량과 낮은 지연시간이 필요한 서비스에 적합
+</li>
+<li>고정 IP(Elastic IP)가 필요한 아키텍처에 적합, 필요에 따라 각 가용 영역에 Elastic IP 연결 가능
+</li>
+<li>HTTP가 아닌 TCP/UDP 기반 애플리케이션에도 사용 가능
+</li>
+<li>클라이언트의 원본 IP 주소를 백엔드에 보존할 수 있는 구성이 있음
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ALB는 HTTP 요청을 이해하고, NLB는 네트워크 연결을 전달함
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="xff"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">X-Forwarded-For(XFF) 헤더</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<ul class="pts">
+<li>HTTP 요청이 어떤 클라이언트에서 시작되었는지 확인할 수 있도록 클라이언트의 IP 주소를 전달하는 헤더
+</li>
+<li>왜 XFF 헤더가 필요할까?
+<ul>
+<li>클라이언트가 ALB를 통해 EC2에 접속하면, EC2가 보는 네트워크 연결의 상대방은 일반적으로 원래 클라이언트가 아니라 로드 밸런서임
+</li>
+<li>따라서 웹 서버가 단순히 연결의 원본 IP만 기록하면 클라이언트의 IP를 확인하기 어려울 수 있음. ALB는 기본 설정에서 XFF 헤더에 클라이언트 IP를 추가해 백엔드로 전달함
+</li>
+<li>XFF 헤더를 통해 애플리케이션은
+<ul>
+<li>웹 서버 로그에 클라이언트 IP 기록
+</li>
+<li>접속 통계 및 요청 분석
+</li>
+<li>IP 기반 접근 제어 등을 할 수 있음
+</li>
+</ul>
+</li>
+<li>단, XFF 헤더에 적힌 IP를 무조건적으로 신뢰하면 안 됨
+</li>
+<li>클라이언트가 조작한 XFF 값을 보낼 수 있기에 프록시 경로와 헤더 처리 방식을 고려해 판단해야 함
+</li>
+<li>NLB는 지원되는 대상 유형 및 설정에 대해 네트워크 연결의 원본 IP를 직접 보존함
+</li>
+<li>NLB와 Proxy Protocol v2를 함께 사용하는 경우 특정 구성에서 원본 IP 등 연결 정보를 별도의 프로토콜 헤더로 전달함
+</li>
+<li>즉, NLB는 L4에서 동작하므로 적절한 구성에서는 IP 패킷의 원본 주소 자체를 보존할 수 있지만, 특정 구성에서는 원본 IP가 그대로 보존되지 않을 수 있음. 이때 Proxy Protocol v2를 사용하면 원본 연결 정보를 전달할 수 있음
+</li>
+<li>함께 알아두면 좋은 X-Forwarded 헤더
+<ol>
+<li>X-Forwarded-Proto: 클라이언트가 ALB에 연결할 때 사용한 프로토콜 ex. https
+</li>
+<li>X-Forwarded-Port: 클라이언트가 ALB에 연결할 때 사용한 포트 ex. 443
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="cross-zone"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Cross-Zone Load Balancing</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<ul class="pts">
+<li>로드 밸런서가 특정 AZ에 들어온 트래픽을 다른 AZ에 있는 대상 인스턴스에도 분산할 수 있도록 하는 기능
+</li>
+<li>AZ별로 인스턴스 수가 다르더라도 전체 인스턴스에 트래픽을 고르게 분산할 수 있는 특징을 지님
+</li>
+<li>Cross-Zone Load Balancing은 인스턴스의 수를 조정하는 것이 아니라, 기존 인스턴스들을 AZ 경계와 상관없이 활용할 수 있도록 해주는 기능
+</li>
+</ul>
+<ol class="pts">
+<li>Cross-Zone Load Balancing이 없는 경우
+<ul>
+<li>AZ - A와 AZ - B 존재, AZ - A에는 2개의 인스턴스, AZ - B에는 1개의 인스턴스 존재
+</li>
+<li>AZ - A와 AZ - B로 트래픽이 절반씩 들어온다고 가정 시 AZ - A에 존재하는 인스턴스는 각각 25%의 트래픽을 받지만, AZ - B에 존재하는 1개의 인스턴스는 50%의 트래픽을 받음
+</li>
+<li> → 결과적으로 AZ - B에 있는 인스턴스가 다른 인스턴스보다 상대적으로 많은 부하를 받게 됨</li>
+</ul>
+</li>
+<li>Cross-Zone Load Balancing이 활성화된 경우
+<ul>
+<li>각 AZ의 로드 밸런서 노드가 다른 AZ에 있는 대상 인스턴스에도 트래픽을 전달할 수 있음
+</li>
+<li>즉, 아까와 같은 상황에서 AZ - B에 몰렸던 트래픽을 AZ - A에 존재하는 인스턴스로 전달하여 특정 AZ의 인스턴스에 부하가 집중되는 현상을 줄일 수 있음
+</li>
+</ul>
+</li>
+</ol>
+<div class="tbl"><table>
+<caption>Cross-Zone Load Balancing의 활성화 여부</caption>
+<thead><tr><th scope="col">로드 밸런서</th><th scope="col">기본값</th><th scope="col">설명</th></tr></thead><tbody>
+<tr><th scope="row">ALB</th><td>활성화</td><td>기본으로 AZ 간 트래픽 분산 수행</td></tr>
+<tr><th scope="row">NLB</th><td>비활성화</td><td>수동으로 활성화하면 AZ 간 트래픽 분산이 가능하지만, <strong>교차 AZ 데이터 전송 비용이 발생할 수 있음</strong></td></tr>
+<tr><th scope="row">GWLB</th><td>비활성화</td><td>필요에 따라 활성화 가능</td></tr>
+</tbody></table></div>
+<div class="note"><h3>예상 시험 지문</h3><p>한 기업은 두 개의 AZ에 EC2 인스턴스를 배포했습니다. AZ-A에는 4대, AZ-B에는 2대의 인스턴스가 존재합니다. 기업은 특정 AZ에 트래픽이 집중되는 현상을 방지하고 모든 AZ의 인스턴스를 활용하고자 합니다. 어떤 기능을 사용해야 할까요? → Cross-Zone Load Balancing</p></div>
+    </section>
+
+    <section 
+      id="session"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Session State와 Sticky Session</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<h3 class="s">Sticky Sessions(세션 고정)</h3>
+<ul class="pts">
+<li>같은 사용자의 요청을 일정 기간 같은 대상으로 전달하도록 하는 기능
+</li>
+<li>ex. EC2 A의 메모리에 세션이 저장되어 있다면, 해당 사용자의 후속 요청도 A로 전달되도록 설정할 수 있음
+<ul>
+<li>단, 단점도 존재
+<ol>
+<li>A가 장애를 일으키면 세션 정보가 유실될 수 있음
+</li>
+<li>트래픽이 특정 인스턴스에 몰릴 수 있음
+</li>
+<li>Auto Scaling으로 인스턴스가 추가되어도 부하가 항상 균등하게 분배되지는 않음
+</li>
+</ol>
+</li>
+<li>→ Sticky Session이 항상 나쁜 것은 아니지만, 가능하다면 세션을 외부에서 공유해 서버 간 의존성을 줄이는 설계(External Session Storage)가 확장성과 장애 대응 측면에서 유리한 경우가 많음
+</li>
+</ul>
+</li>
+</ul>
+<ul class="pts">
+<li>Session State: 사용자가 웹 서비스와 상호작용하는 동안 유지해야 하는 사용자별 정보 → 기억해야 할 정보</li>
+<li>Session Stickiness: 동일한 사용자의 요청을 <strong>동일한 서버로 계속 전달</strong>하는 기능 → 같은 서버에 계속 연결하는 방법</li>
+</ul>
+<h3 class="s">Session State란?</h3>
+<ul class="pts">
+<li>ex. 온라인 쇼핑몰
+</li>
+<li>사용자가 다음과 같은 행동을 했다고 가정
+<ol>
+<li>쇼핑몰에 로그인
+</li>
+<li>상품 A를 장바구니에 담음
+</li>
+<li>상품 B를 장바구니에 담음
+</li>
+<li>결제 페이지로 이동
+</li>
+</ol>
+</li>
+<li>이 과정에서 서버는 사용자의 로그인 정보와 장바구니 정보를 유지해야 함
+</li>
+<li>이러한 사용자별 정보를 Session State라고 함
+</li>
+</ul>
+<h3 class="s">Session State와 Load Balancing의 관계</h3>
+<ul class="pts">
+<li>ex. Session State가 서버 내부에 저장된 케이스
+</li>
+<li>두 대의 EC2 인스턴스가 ALB 뒤에서 작동한다고 가정
+</li>
+<li>사용자의 첫 번째 요청이 EC2 1로 전달되면 EC2 1은 로그인 정보와 장바구니 정보를 저장
+</li>
+<li>그런데 다음 요청이 Load Balancing에 의해 EC2 2로 전달되면 EC2 2에는 사용자의 세션 정보가 없기 때문에 문제가 발생할 수 있음
+</li>
+<li>→ 이 문제를 해결할 수 있는 방법 중 하나가 바로 Sticky Session임
+</li>
+</ul>
+<h3 class="s">Session Stickiness란?</h3>
+<ul class="pts">
+<li><strong>Session Stickiness(세션 고정)</strong>는 특정 사용자의 요청을 동일한 서버로 지속적으로 전달하는 기능
+</li>
+<li>AWS ALB에서는 이를 Sticky Session 또는 Session Affinity라고 부름
+</li>
+<li>ALB의 Sticky Session은 쿠키를 기반으로 작동
+<ul>
+<li>작동 과정
+<ol>
+<li>최초 요청 - 브라우저가 ALB에 HTTP 요청을 보냄. 이때는 쿠키가 없는 상태
+</li>
+<li>ALB가 인스턴스 선택 - ALB가 EC2 1을 선택하여 요청 전달
+</li>
+<li>ALB가 쿠키 발급 - EC2 1의 응답을 브라우저에 전달하면서 ALB가 생성한 쿠키를 응답에 포함
+</li>
+<li>브라우저가 쿠키 저장 - 브라우저는 응답에 포함된 쿠키를 저장
+</li>
+<li>이후 요청에 쿠키 포함 - 브라우저가 다음 요청을 보낼 때 저장된 쿠키를 함께 전송
+</li>
+<li>ALB가 기존 인스턴스로 전달 - ALB는 쿠키를 확인하여 이전에 선택했던 EC2 1로 요청 전달
+</li>
+</ol>
+</li>
+<li>즉, ALB가 사용자를 식별하는 데 쿠키를 활용하여 동일한 서버로 요청을 전달하는 것
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="s">ALB의 Sticky Session 유형</h3>
+<ul class="pts">
+<li>Duration-based: ALB가 생성한 쿠키의 유효기간을 설정
+</li>
+<li>Application-based: 애플리케이션이 생성한 쿠키를 기반으로 세션 고정
+</li>
+<li>시험에서는 ALB Sticky Session - Cookie 기반으로 동일한 대상에 요청을 전달한다는 기능에 집중하면 됨
+</li>
+</ul>
+<h3 class="s">Sticky Session의 한계</h3>
+<ul class="pts">
+<li>Sticky Session으로 Session State 문제가 완전히 해결되는 것은 아님
+</li>
+<li>만약 사용자 A의 정보가 EC2 1에 모두 저장되어 있었는데, EC2 1에 장애가 발생한다면?
+</li>
+<li>사용자 A는 다른 인스턴스로 연결될 수 있지만, 기존 세션 정보가 타 인스턴스로 자동으로 이전되는 것은 아님
+</li>
+<li>따라서 Sticky Session은 세션 정보를 복제하거나 공유할 수 없고, 단순히 동일한 서버로 요청을 전달하는 기능
+</li>
+</ul>
+<h3 class="s">External Session Storage(외부 세션 저장소)</h3>
+<ul class="pts">
+<li>Sticky Session이 가지는 한계를 해결하기 위해 사용하는 방법
+</li>
+<li>Sticky Session보다 더 권장되는 아키텍처
+</li>
+<li>세션 정보를 개별 EC2 인스턴스 내부에 저장하는 대신, 여러 인스턴스가 접근할 수 있는 별도의 저장소에 보관하는 방법(AWS의 경우 Amazon ElastiCache를 활용하여 구현 가능)
+</li>
+<li>ex.
+<ol>
+<li>사용자 A의 요청이 EC2 1에 전달
+</li>
+<li>EC2 1은 로그인 정보와 장바구니 정보를 ElastiCache에 저장
+</li>
+<li>다음 요청이 EC2 2에 전달되더라도 ElastiCache에서 동일한 세션 정보를 조회
+</li>
+<li>따라서 사용자는 서버가 바뀌어도 로그인 상태와 장바구니 정보 유지 가능
+</li>
+</ol>
+</li>
+<li>단, External Session Storage를 활용한다고 해서 모든 장애 문제가 해결되는 것은 아님
+</li>
+<li>External Session Storage를 구현하기 위해 ElastiCache를 사용하기에 ElastiCache가 중요한 구성 요소이므로, ElastiCache 자체의 가용성도 확보해야 함
+<ol>
+<li>Primary와 Replica 구성(Automatic Failover - 자동 장애 조치)
+<ul>
+<li>복제와 자동 장애 조치는 Valkey/Redis OSS 엔진 기준이며, Memcached는 복제와 자동 장애 조치를 지원하지 않음
+</li>
+<li>작동 과정
+<ol>
+<li>AZ-A의 Primary가 세션 데이터 저장
+</li>
+<li>해당 데이터가 AZ-B의 Replica로 복제
+</li>
+<li>AZ-A의 Primary에 장애 발생
+</li>
+<li>AWS가 Replica를 새로운 Primary로 승격
+</li>
+<li>애플리케이션은 새로운 Primary를 통해 세션 데이터를 조회하고 저장
+</li>
+</ol>
+<ul>
+<li>단, 복제는 일반적으로 비동기 복제(Async)이므로 장애 직전의 일부 데이터가 복제되지 못할 가능성이 있음. 또한 장애 조치 중에는 일시적인 연결 중단이 발생할 수 있음
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 class="s">ALB, Auto Scaling, External Session Storage(by ElastiCache) 전체 아키텍처</h3>
+<ul class="pts">
+<li>전체 요청 흐름
+<ol>
+<li>사용자가 ALB에 요청
+</li>
+<li>ALB가 여러 EC2 인스턴스 중 하나로 요청을 전달
+</li>
+<li>EC2는 ElastiCache에서 사용자의 세션 정보를 조회
+</li>
+<li>세션 정보가 존재하면 로그인 상태와 사용자 정보 확인
+</li>
+<li>사용자의 요청을 처리하고 필요한 세션 정보를 갱신
+</li>
+<li>ElastiCache의 Primary 데이터는 다른 AZ의 Replica에도 복제
+</li>
+</ol>
+</li>
+</ul>
+    </section>
+
+    <section 
+      id="tls"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">SSL/TLS Termination과 End-to-End Encryption</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+<h3 class="s">SSL/TLS Termination(SSL/TLS 종료)</h3>
+<ul class="pts">
+<li>HTTPS 통신
+<ul>
+<li>HTTP 통신에 TLS 암호화를 적용한 것
+</li>
+<li>일반적으로 클라이언트와 서버 사이에서 TLS 연결을 설정하고 데이터를 암호화하여 주고 받음
+</li>
+</ul>
+</li>
+<li>AWS에서 ALB를 사용하는 경우, EC2(서버)가 직접 TLS 암호화를 처리하지 않고 ALB가 대신 처리하도록 구성할 수 있는데 SSL/TLS Termination이 그것임
+</li>
+<li>SSL/TLS Termination 작동 과정
+<ul>
+<li>SSL/TLS Termination 구조
+<ul>
+<li>브라우저 → ALB → 서버(EC2 인스턴스)
+</li>
+<li>ALB(TLS Termination)
+<ol>
+<li>SSL/TLS 인증서로 클라이언트와 TLS 연결
+</li>
+<li>암호화된 HTTPS 요청 복호화
+</li>
+<li>HTTP 요청으로 전달할 수 있도록 처리
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>단계별 순서
+<ol>
+<li>사용자(Client)가 브라우저에서 HTTPS 요청을 보냄
+</li>
+<li>ALB의 HTTPS Listener가 요청을 받음
+</li>
+<li>ALB는 등록된 SSL/TLS 인증서를 사용하여 TLS 연결을 설정
+</li>
+<li>ALB가 암호화된 요청 복호화
+</li>
+<li>ALB가 HTTP 요청을 EC2 instance로 전달
+</li>
+<li>EC2는 복호화 작업 없이 애플리케이션 처리에만 집중
+</li>
+</ol>
+<ul>
+<li>SSL/TLS 인증서는 AWS Certificate Manager를 통해 발급하거나 가져올 수 있음
+</li>
+<li>ALB에 HTTPS Listener를 생성하려면 서버 인증서와 TLS 보안 정책이 필요
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SSL/TLS Termination을 사용하는 이유
+<ol>
+<li>EC2의 처리 부담 감소
+<ul>
+<li>TLS 암호화와 복호화에는 CPU 자원이 사용됨
+</li>
+<li>ALB가 이 작업을 대신하면 EC2는 애플리케이션 로직 처리에 더 집중 가능
+</li>
+</ul>
+</li>
+<li>인증서 관리의 편리성
+<ul>
+<li>EC2가 여러 대라면 각각의 EC2에 인증서를 설치하고 관리해야 할 수 있음
+</li>
+<li>하지만 ALB에서 TLS Termination을 수행하면 인증서를 ALB에 집중하여 관리할 수 있음
+</li>
+</ul>
+</li>
+<li>확장성 및 관리 편의성
+<ul>
+<li>Auto Scaling으로 EC2가 추가되거나 교체되더라도 개별 인스턴스에 HTTPS 인증서를 설치할 필요가 없는 구조를 만들 수 있음
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 class="s">SSL/TLS Termination과 End-to-End Encryption 비교</h3>
+<ol class="pts">
+<li>SSL/TLS Termination
+<ul>
+<li>클라이언트 → ALB만 암호화(HTTPS 연결)
+</li>
+<li>ALB와 EC2 간의 연결은 암호화되어있지 않음(HTTP 연결)
+</li>
+<li>ALB에서 복호화한 후 EC2에 HTTP로 전달하는 구조
+</li>
+</ul>
+</li>
+<li>End-to-End Encryption
+<ul>
+<li>ELB에서만 사용되는 특정 기능의 명칭이 아니라 통신의 양 끝단 사이에서 암호화가 유지되는 구조를 설명하는 개념
+</li>
+<li>ALB Case(TLS 재암호화)
+<ul>
+<li>클라이언트 → ALB → EC2 모두 암호화(모두 HTTPS 연결)
+</li>
+<li>클라이언트에서 ALB로 넘어올 때, TLS 복호화 후 다시 암호화하여 EC2에 전달
+</li>
+<li>이 경우 ALB의 Target Group 프로토콜을 HTTPS로 설정하고, EC2에서도 HTTPS 통신을 처리하도록 구성해야 함
+</li>
+<li>ALB에서 TLS 연결이 한 번 종료되고, EC2와 새로운 TLS 연결을 맺는 구조
+</li>
+<li>클라이언트와 EC2 사이에 하나의 TLS 연결이 그대로 유지되는 것은 아님
+</li>
+</ul>
+</li>
+<li>NLB Case(TLS Pass-through)
+<ul>
+<li>클라이언트 → NLB(TCP Listener) → EC2 모두 암호화
+</li>
+<li>클라이언트로부터 받은 TLS 연결을 복호화/종료하지 않고 동일한 TLS 연결의 암호화 데이터를 EC2에 전달
+</li>
+<li>EC2는 전달받은 TLS 연결을 TLS 복호화 및 처리
+</li>
+</ul>
+</li>
+<li>End-to-End Encryption은 로드 밸런서와 EC2 간의 연결의 보안을 강화하지만, SSL/TLS Termination의 장점이던 EC2의 처리 부담 감소 효과까지 기대할 수는 없음
+</li>
+<li>두 구조는 보안성과 성능 사이의 설계 선택으로 특정 구조가 더 낫다고 단정할 수 없음
+</li>
+</ul>
+</li>
+</ol>
+<h3 class="s">ALB와 NLB에서의 SSL/TLS Termination</h3>
+<p>두 로드 밸런서 모두 TLS Termination을 지원하지만 Listener 설정에 차이가 있음</p>
+<div class="tbl"><table>
+<caption>ALB와 NLB의 TLS 설정 비교</caption>
+<thead><tr><th scope="col">항목</th><th scope="col">ALB</th><th scope="col">NLB</th></tr></thead><tbody>
+<tr><th scope="row">TLS 종료 Listener</th><td>HTTPS</td><td>TLS</td></tr>
+<tr><th scope="row">기본 포트</th><td>443</td><td>443</td></tr>
+<tr><th scope="row">인증서</th><td>ACM(AWS Certificate Manager) 등</td><td>ACM(AWS Certificate Manager) 등</td></tr>
+<tr><th scope="row">주요 계층</th><td>Layer 7</td><td>Layer 4</td></tr>
+<tr><th scope="row">암호화 트래픽 전달</th><td>HTTPS Target Group 사용 가능</td><td>TCP Listener로 TLS Pass-through 가능</td></tr>
+</tbody></table></div>
+<h3 class="s">NLB 특이 사항</h3>
+<ul class="pts">
+<li>TLS Listener(TLS Termination): NLB가 TLS를 종료하고 복호화
+</li>
+<li>TCP Listener(443)(TLS Pass-through): TLS를 복호화하지 않고 암호화된 트래픽을 EC2로 전달(클라이언트와 EC2가 직접 TLS 연결을 맺음) → End-to-End Encryption의 대표적 형태로 볼 수 있음
+</li>
+</ul>
+    </section>
+    <p class="group">AWS Organizations 기초</p>
+
+    <section 
+      id="org-basic"
+      data-domain="2"
+      data-level="basic"
+    >
+      <h2 class="t">AWS Organizations 개념과 구성 요소</h2>
+      <p class="tag d2">도메인 2 보안 및 규정 준수</p>
+      <p>AWS Organizations는 여러 AWS 계정을 하나의 조직(Organization)으로 통합하여 중앙에서 관리할 수 있도록 지원하는 서비스입니다.</p>
+      <ul class="pts">
+        <li>여러 AWS 계정을 중앙에서 관리</li>
+        <li>계정별 서비스 사용 및 권한 제한</li>
+        <li>여러 계정의 비용을 통합 관리</li>
+        <li>조직 단위로 정책 적용</li>
+      </ul>
+      <h3 class="s">주요 구성 요소</h3>
+      <div class="tbl"><table>
+        <caption>Organizations의 구성 요소</caption>
+        <thead><tr><th scope="col">구성 요소</th><th scope="col">설명</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Management Account</th><td>조직 전체를 생성하고 관리하는 계정. 조직의 정책 및 결제 관리 담당</td></tr>
+          <tr><th scope="row">Member Account</th><td>조직에 소속되어 관리되는 개별 AWS 계정</td></tr>
+          <tr><th scope="row">Organizational Unit(OU)</th><td>여러 계정을 그룹으로 묶는 논리적 단위</td></tr>
+          <tr><th scope="row">Organization</th><td>Management Account와 Member Account로 구성된 조직 전체</td></tr>
+        </tbody>
+      </table></div>
+      <h3 class="s">OU(Organizational Unit)</h3>
+      <ul class="pts">
+        <li>여러 AWS 계정을 부서, 프로젝트, 환경 등의 기준으로 그룹화할 수 있습니다.</li>
+        <li>OU에 정책을 적용하면 해당 OU에 속한 계정에 정책이 상속됩니다.</li>
+        <li>OU는 계층 구조로 구성할 수 있습니다.</li>
+        <li>예: Production OU(운영 환경 계정), Development OU(개발 환경 계정), Security OU(보안 관리 계정)</li>
+      </ul>
+      <h3 class="s">계정 관리와 자동화</h3>
+      <ul class="pts">
+        <li>새로운 AWS 계정을 조직에 추가할 수 있습니다.</li>
+        <li>계정을 OU별로 분류하여 관리할 수 있습니다.</li>
+        <li>조직 전체에 공통 정책을 적용할 수 있습니다.</li>
+        <li>AWS 계정 생성 및 관리 작업을 자동화할 수 있습니다.</li>
+      </ul>
+      <h3 class="s">기능 모드</h3>
+      <ul class="pts">
+        <li>All features: 통합 결제와 SCP 등 모든 기능을 사용할 수 있습니다.</li>
+        <li>Consolidated billing features only: 통합 결제 기능만 사용할 수 있습니다(SCP 사용 불가).</li>
+      </ul>
+      <div class="note">
+        <h3>시험 포인트</h3>
+        <ul>
+          <li>여러 AWS 계정을 중앙에서 관리 → AWS Organizations</li>
+          <li>조직 내 계정을 부서별로 그룹화 → OU</li>
+        </ul>
+      </div>
+    </section>
+    <section 
+      id="org-billing"
+      data-domain="4"
+      data-level="basic"
+    >
+      <h2 class="t">Consolidated Billing(통합 결제)</h2>
+      <p class="tag d4">도메인 4 요금 및 지원</p>
+      <p>여러 AWS 계정의 비용을 하나의 Management Account에서 통합 관리하는 기능입니다.</p>
+      <ul class="pts">
+        <li>조직에 속한 여러 계정의 청구서를 통합할 수 있습니다.</li>
+        <li>통합 사용량을 기반으로 볼륨 할인 등의 혜택을 받을 수 있습니다.</li>
+        <li>조직 안의 계정끼리 Reserved Instances와 Savings Plans의 할인 혜택을 공유할 수 있습니다.</li>
+        <li>계정별 사용 비용은 개별적으로 확인할 수 있습니다.</li>
+        <li>Member Account의 개별 결제 관리 부담을 줄일 수 있습니다.</li>
+      </ul>
+      <div class="note">
+        <h3>시험 포인트</h3>
+        <ul>
+          <li>여러 AWS 계정의 비용을 하나의 계정에서 통합 관리하고 비용 절감 혜택을 활용하려면 Consolidated Billing을 사용합니다.</li>
+          <li>여러 계정의 통합 사용량을 통한 비용 절감 → Consolidated Billing</li>
+        </ul>
+      </div>
+    </section>
+    <section 
+      id="org-scp-basic"
+      data-domain="2"
+      data-level="basic"
+    >
+      <h2 class="t">SCP(Service Control Policies) 기초</h2>
+      <p class="tag d2">도메인 2 보안 및 규정 준수</p>
+      <p>SCP는 조직 Root, OU 또는 개별 계정에 적용하여 AWS 서비스 및 작업에 대한 최대 권한 범위(Maximum Permissions)를 정의하는 정책입니다.</p>
+      <ul class="pts">
+        <li>특정 AWS 서비스나 작업을 사용하지 못하도록 제한할 수 있습니다.</li>
+        <li>조직 전체 또는 특정 OU, 계정에 적용할 수 있습니다.</li>
+        <li>Member Account의 IAM 사용자, 역할, 루트 사용자는 SCP가 허용한 범위를 넘는 권한을 사용할 수 없습니다.</li>
+        <li>SCP 자체는 권한을 부여하지 않습니다.</li>
+        <li>예: 회사의 모든 계정에서 특정 리전 이외의 AWS 리전을 사용하지 못하도록 제한</li>
+      </ul>
+      <h3 class="s">SCP와 IAM 정책의 차이</h3>
+      <div class="tbl"><table>
+        <caption>IAM Policy와 SCP 비교</caption>
+        <thead><tr><th scope="col">구분</th><th scope="col">IAM Policy</th><th scope="col">SCP</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">역할</th><td>권한 부여 및 제한</td><td>최대 권한 범위 제한</td></tr>
+          <tr><th scope="row">적용 대상</th><td>IAM 사용자, 그룹, 역할 등</td><td>조직 Root, OU, 계정(영향받는 대상: Member Account의 IAM 사용자, 역할, 루트 사용자)</td></tr>
+          <tr><th scope="row">권한 부여</th><td>가능</td><td>불가능</td></tr>
+        </tbody>
+      </table></div>
+      <p>SCP에서 허용하더라도 IAM 정책에서 허용하지 않으면 작업할 수 없습니다. 실제로 쓸 수 있는 권한은 SCP가 허용하는 범위와 IAM 정책이 부여한 권한이 겹치는 부분입니다.</p>
+      <div class="note">
+        <h3>시험 포인트</h3>
+        <ul>
+          <li>특정 OU에 속한 계정들의 서비스 사용 제한 → SCP</li>
+          <li>계정의 최대 권한 범위 제한 → SCP</li>
+          <li>SCP는 계정에 부여할 수 있는 최대 권한을 제한하며, 직접 권한을 부여하지 않습니다.</li>
+          <li>기본 설정에서는 모든 작업을 허용하는 SCP(<code>FullAWSAccess</code>)가 연결되어 있어, 보통은 막을 작업만 Deny하는 방식으로 씁니다. 허용한 작업만 쓰게 하는 방식(Allow List)에서는 허용하지 않은 작업이 막힙니다.</li>
+          <li>정책은 상위에서 하위로 상속되고, 명시적 Deny가 항상 우선합니다.</li>
+          <li>SCP는 Management Account 자체에는 적용되지 않습니다.</li>
+        </ul>
+      </div>
+    </section>
+    <p class="group">다중 계정: Organizations와 Control Tower</p>
+
+    <section 
+      id="org"
+      data-domain="2"
+      data-level="advanced"
+    >
+      <h2 class="t">AWS Organizations 구조</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <p>여러 AWS 계정을 하나의 조직으로 묶어 중앙에서 관리하고, 계정별 권한과 정책을 통제하는 서비스입니다. 개발, 운영, 보안, 테스트 환경을 한 계정에 섞어 두면 권한과 리소스가 뒤섞이므로, 계정을 목적별로 나누고 그룹화해 관리합니다.</p>
+      <h3 class="s">계층 구조</h3>
+      <ul class="pts">
+        <li>Management Account: 조직을 만들고 중앙에서 관리하는 계정</li>
+        <li>Root(조직 Root): 조직의 최상위 컨테이너입니다. K8s나 Docker의 컨테이너가 아니라, 모든 OU와 계정을 담는 논리적 최상위 공간입니다.</li>
+        <li>OU(Organizational Unit): 목적에 따라 계정을 묶는 단위입니다. OU 안에 다른 OU를 만들 수 있습니다(예: Root → Business OU → Development OU → Account A).</li>
+        <li>Account: 실제 리소스를 만들고 운영하는 계정</li>
+        <li>상위 OU에 설정한 정책은 하위 OU와 계정에 적용됩니다.</li>
+      </ul>
+      <div class="note">
+        <h3>용어 주의: Root와 Root User</h3>
+        <ul>
+          <li><strong>조직 Root</strong>는 조직의 최상위 컨테이너이고, <strong>Root User</strong>는 각 계정의 최고 권한 사용자(이메일로 로그인)입니다. 서로 다른 개념입니다.</li>
+          <li>Management Account도 Root 컨테이너에 포함되지만 SCP는 적용되지 않습니다.</li>
+        </ul>
+      </div>
+      <div class="tbl"><table>
+        <caption>Management Account와 Member Account</caption>
+        <thead><tr><th scope="col">구분</th><th scope="col">역할</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Management Account</th><td>계정 생성, 기존 계정 초대, OU 생성과 계정 이동, 조직 전체에 정책 연결, 통합 결제(Consolidated Billing) 관리</td></tr>
+          <tr><th scope="row">Member Account</th><td>EC2, S3, RDS 등 실제 워크로드 운영. Organizations 정책(SCP)의 통제를 받음</td></tr>
+        </tbody>
+      </table></div>
+      <ul class="pts">
+        <li>SCP가 Management Account에는 적용되지 않으므로, AWS는 Management Account에 실제 워크로드를 두지 않는 것을 권장합니다.</li>
+      </ul>
+    </section>
+    <section 
+      id="org-api"
+      data-domain="2"
+      data-level="advanced"
+    >
+      <h2 class="t">Organizations API</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <p>콘솔에서 클릭해서 하던 계정과 조직 구조 관리 작업을 CLI/SDK/API로 자동화하는 인터페이스입니다.</p>
+      <ul class="pts">
+        <li><code>CreateOrganization</code>: 새 조직 생성</li>
+        <li><code>CreateAccount</code>: 새 AWS 계정 생성</li>
+        <li><code>InviteAccountToOrganization</code>: 기존 계정을 조직에 초대</li>
+        <li><code>CreateOrganizationalUnit</code>: OU 생성</li>
+        <li><code>MoveAccount</code>: 계정을 다른 OU로 이동</li>
+        <li><code>CreatePolicy</code>: 새 조직 정책 생성</li>
+        <li><code>AttachPolicy</code>: 정책을 Root, OU, 계정에 연결</li>
+        <li><code>RegisterDelegatedAdministrator</code>: 멤버 계정을 위임 관리자로 등록</li>
+      </ul>
+      <p>예: 새 개발팀이 생기면 <code>CreateAccount</code> → <code>CreateOrganizationalUnit</code> → <code>MoveAccount</code> → <code>AttachPolicy</code> 순으로 자동화할 수 있습니다.</p>
+      <div class="note">
+        <h3>주의</h3>
+        <ul><li>이 API는 계정 생성, 초대, 이동, 정책 연결을 자동화할 뿐, EC2나 S3 같은 서비스 자체를 만드는 기능이 아닙니다.</li></ul>
+      </div>
+    </section>
+    <section 
+      id="scp"
+      data-domain="2"
+      data-level="advanced"
+    >
+      <h2 class="t">SCP(Service Control Policy)와 상속</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <h3 class="s">SCP란?</h3>
+      <ul class="pts">
+        <li>조직 안 계정의 IAM User와 IAM Role이 사용할 수 있는 <strong>최대 권한의 범위</strong>를 제한하는 정책입니다.</li>
+        <li>SCP는 권한을 <strong>부여하지 않고 제한</strong>합니다. 실제로 쓸 수 있는 권한은 IAM 정책 등 권한 부여 정책과 SCP가 허용하는 범위의 <strong>교집합</strong>입니다.</li>
+        <li>예: IAM Policy가 S3를 Allow해도 SCP가 S3를 Deny하면 접근 불가입니다. 반대로 SCP가 막지 않아도 IAM Policy가 권한을 주지 않았다면 접근 불가입니다.</li>
+      </ul>
+      <h3 class="s">적용 대상과 예외</h3>
+      <ul class="pts">
+        <li>연결 위치: 조직 Root, OU, Member Account</li>
+        <li>영향받는 대상: Member Account의 IAM User, IAM Role, Root User</li>
+        <li><strong>Management Account에는 적용되지 않고</strong>, 서비스 연결 역할(Service-linked role)도 SCP의 제한을 받지 않습니다.</li>
+      </ul>
+      <h3 class="s">전략: Deny List와 Allow List</h3>
+      <div class="cols">
+        <div>
+          <h3>Deny List</h3>
+          <ul class="pts">
+            <li>기본적으로 모두 허용하고 특정 서비스나 작업만 명시적으로 거부(예: CloudTrail 비활성화 금지)</li>
+            <li>새 서비스가 추가돼도 허용 정책을 추가할 필요가 적고 관리가 간단함</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Allow List</h3>
+          <ul class="pts">
+            <li>명시적으로 허용한 서비스와 작업만 사용 가능(예: EC2, S3, RDS만 허용)</li>
+            <li>엄격한 통제로 규제가 심한 환경에 적합하지만, 새 서비스를 쓰려면 SCP를 수정해야 하고 관리가 복잡함</li>
+          </ul>
+        </div>
+      </div>
+      <p>AWS는 기본으로 모든 서비스를 허용하는 관리형 SCP인 <code>FullAWSAccess</code>를 Root, OU, 계정에 연결해 둡니다. 그래서 기본 설정에서는 Deny List가 쉽고, Allow List를 쓰려면 <code>FullAWSAccess</code>를 제거하고 필요한 권한만 허용하는 SCP로 대체해야 합니다.</p>
+      <h3 class="s">상속 원칙</h3>
+      <ol class="pts">
+        <li>상위 OU의 SCP는 하위 OU와 계정에 적용됩니다.</li>
+        <li><strong>Allow</strong>는 대상 계정까지 이어지는 <strong>모든 계층에서 허용</strong>되어야 합니다(계층별 허용 범위의 교집합).</li>
+        <li><strong>Deny</strong>는 경로상 어느 한 계층에서라도 걸리면 하위 계정의 해당 작업을 차단합니다. 명시적 Deny가 항상 우선합니다.</li>
+      </ol>
+      <div class="tbl"><table>
+        <caption>Allow List 상속 예시</caption>
+        <thead><tr><th scope="col">계층</th><th scope="col">SCP가 허용하는 서비스</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Root</th><td>EC2, S3, RDS</td></tr>
+          <tr><th scope="row">Development OU</th><td>EC2, S3</td></tr>
+          <tr><th scope="row">Account A</th><td>EC2, S3, RDS</td></tr>
+          <tr><th scope="row">결과(교집합)</th><td><strong>EC2, S3</strong> (RDS는 중간 OU에서 허용되지 않아 사용 불가)</td></tr>
+        </tbody>
+      </table></div>
+      <p>Deny 예: Root와 Account A에서 EC2가 Allow여도, 중간의 Development OU에서 Deny이면 Account A는 EC2를 쓸 수 없습니다.</p>
+    </section>
+    <section 
+      id="iam-scp"
+      data-domain="2"
+      data-level="advanced"
+    >
+      <h2 class="t">IAM Policy vs Permissions Boundary vs SCP</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <div class="tbl"><table>
+        <thead><tr><th scope="col">구분</th><th scope="col">역할</th><th scope="col">비유</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">IAM Policy</th><td>실제로 어떤 작업을 할 수 있는지 권한을 <strong>부여</strong></td><td>직원에게 실제 업무 권한 부여</td></tr>
+          <tr><th scope="row">Permissions Boundary</th><td>특정 IAM User/Role이 가질 수 있는 <strong>최대 권한</strong> 제한</td><td>직원 권한의 상한선</td></tr>
+          <tr><th scope="row">SCP</th><td>Organizations 소속 계정 전체의 최대 권한을 조직 차원에서 제한</td><td>회사 전체의 업무 범위 제한</td></tr>
+        </tbody>
+      </table></div>
+      <ul class="pts">
+        <li>IAM Policy에 Allow가 있어도 Permissions Boundary, SCP, 명시적 Deny 등을 함께 평가하므로 접근이 보장되지는 않습니다.</li>
+        <li>Organizations 환경의 유효 권한은 <strong>IAM Policy ∩ Permissions Boundary ∩ SCP</strong>입니다(명시적 Deny는 항상 우선).</li>
+        <li>대상이 다릅니다. Permissions Boundary는 특정 IAM User/Role, SCP는 Member Account의 IAM User, Role, Root User입니다.</li>
+        <li>예: 모든 계정에서 특정 리전 밖의 사용을 금지하려면 계정마다 정책을 만들 필요 없이 Root나 OU에 SCP 하나를 연결합니다.</li>
+      </ul>
+      <div class="note">
+        <h3>Permissions Boundary 위임 시나리오</h3>
+        <ul>
+          <li>개발팀 관리자에게 IAM User 생성 권한을 위임하되, <strong>지정된 Permissions Boundary를 붙여야만 생성</strong>되도록 조건(<code>iam:PermissionsBoundary</code> 조건 키)을 겁니다.</li>
+          <li>그러면 관리자가 어떤 정책을 붙여도 경계를 넘는 권한은 쓸 수 없어 권한 상승을 막습니다.</li>
+          <li>시험 키워드: Delegate IAM permission management safely / Prevent privilege escalation / Set the maximum permission for IAM users or roles</li>
+        </ul>
+      </div>
+    </section>
+    <section 
+      id="ct"
+      data-domain="2"
+      data-level="advanced"
+    >
+      <h2 class="t">AWS Control Tower와 Landing Zone</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <p>Organizations가 다중 계정 관리의 기본 틀이라면, Control Tower는 그 위에 보안과 운영 환경을 자동으로 구축하고 관리하는 서비스입니다. Organizations를 <strong>대체하지 않고</strong>, 이를 기반으로 더 높은 수준의 자동화와 거버넌스를 제공합니다.</p>
+      <h3 class="s">Landing Zone</h3>
+      <p>조직이 AWS를 안전하고 일관되게 쓰도록 미리 구성해 둔 다중 계정 기반 환경입니다. 계정 구조뿐 아니라 보안, 접근 권한, 로그 수집, 감사 체계까지 포함합니다.</p>
+      <ul class="pts">
+        <li>AWS Organizations: 계정과 OU의 계층 관리</li>
+        <li>AWS IAM Identity Center: 사용자와 그룹의 중앙 집중식 접근 관리</li>
+        <li>AWS CloudTrail: API 활동 기록</li>
+        <li>AWS Config: 리소스 구성과 변경 추적</li>
+        <li>Control Tower Controls: 보안과 운영 규칙 적용</li>
+        <li>Account Factory: 표준화된 신규 계정 생성</li>
+        <li>설정 이탈(Drift) 감지도 제공합니다.</li>
+      </ul>
+      <div class="tbl"><table>
+        <caption>Organizations와 Control Tower 비교</caption>
+        <thead><tr><th scope="col">항목</th><th scope="col">Organizations</th><th scope="col">Control Tower</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">핵심 역할</th><td>다중 계정 중앙 관리</td><td>다중 계정 환경 자동 구축 및 통제</td></tr>
+          <tr><th scope="row">계정 관리</th><td>생성, 초대, 이동</td><td>Account Factory로 프로비저닝</td></tr>
+          <tr><th scope="row">OU 관리</th><td>직접 구성</td><td>권장 구조를 자동 구성</td></tr>
+          <tr><th scope="row">정책 관리</th><td>SCP, RCP 등</td><td>Controls로 정책과 규칙 적용</td></tr>
+          <tr><th scope="row">설정 자동화</th><td>API 등으로 직접 자동화</td><td>Landing Zone 자동 구성</td></tr>
+          <tr><th scope="row">설정 이탈 감지</th><td>다른 서비스와 직접 조합</td><td>Drift Detection 제공</td></tr>
+        </tbody>
+      </table></div>
+      <h3 class="s">Shared Accounts: 핵심 계정 3가지</h3>
+      <dl class="def">
+        <dt>Management Account</dt>
+        <dd>Control Tower를 설정하고 조직 전체를 관리합니다(Organizations, 계정과 OU, Account Factory, Controls, 통합 결제). 관리 권한이 집중된 계정이므로 일반 서비스나 프로덕션 워크로드를 두지 않고 별도 Member Account를 씁니다.</dd>
+        <dt>Log Archive Account</dt>
+        <dd>여러 계정의 CloudTrail과 AWS Config 로그를 <strong>중앙에서 수집하고 보관</strong>합니다. 목적은 로그의 중앙 보관과 감사 증거 확보이며, 로그를 모으는 계정과 워크로드 계정을 분리합니다. 예: 누가 언제 S3 버킷 정책을 바꾸거나 EC2를 삭제했는지 CloudTrail로 조사합니다.</dd>
+        <dt>Audit Account</dt>
+        <dd>조직 전체의 보안 상태와 규정 준수 여부를 <strong>점검</strong>하는 계정입니다. 로그를 저장하는 Log Archive와 구분하세요. 보안팀이 S3 공개 여부나 EBS 암호화 여부를 확인할 때, Cross-account role로 다른 계정의 리소스에 접근할 수 있게 합니다.</dd>
+      </dl>
+    </section>
+    <section 
+      id="ct-controls"
+      data-domain="2"
+      data-level="advanced"
+    >
+      <h2 class="t">Controls(Guardrails)</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <p>계정들이 보안과 운영 규칙을 지키도록 통제하는 기능입니다. 예전 명칭은 Guardrails이고, 최신 공식 문서는 <strong>Controls</strong>라고 부릅니다. SCP와 같은 개념이 아니라, SCP는 Organizations의 정책 기능이고 Controls는 Control Tower가 제공하는 더 포괄적인 통제 체계입니다.</p>
+      <div class="tbl"><table>
+        <caption>Controls의 3가지 유형</caption>
+        <thead><tr><th scope="col">유형</th><th scope="col">동작</th><th scope="col">주요 구현 방식</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Preventive(예방적)</th><td>위반 작업을 사전에 차단(예: 금지된 리전에서 EC2 생성 거부)</td><td>SCP, RCP, Declarative Policies</td></tr>
+          <tr><th scope="row">Detective(탐지적)</th><td>이미 만들어진 리소스가 정책을 위반하는지 탐지하고 보고(차단이나 자동 수정은 아님)</td><td>AWS Config Rules</td></tr>
+          <tr><th scope="row">Proactive(선제적)</th><td>리소스 생성 전에 규칙 준수 여부를 검사(예: 위반 CloudFormation 템플릿 배포 차단)</td><td>CloudFormation Hooks</td></tr>
+        </tbody>
+      </table></div>
+      <ul class="pts">
+        <li>시험에서는 Preventive Control을 SCP로 떠올리면 좋습니다(단, 모든 예방적 통제가 SCP만으로 구현되지는 않음).</li>
+        <li>Proactive Control은 CloudFormation으로 배포되는 리소스만 검사합니다. 수동 작업이나 다른 배포 도구는 자동으로 검사하지 않습니다.</li>
+      </ul>
+      <h3 class="s">Control의 중요도(위 유형과 별개의 분류)</h3>
+      <ul class="pts">
+        <li>Mandatory: 필수 통제. Landing Zone 설정 시 자동으로 적용되며 비활성화할 수 없음</li>
+        <li>Strongly Recommended: AWS가 강하게 권장하는 통제</li>
+        <li>Elective: 조직의 필요에 따라 선택하는 통제</li>
+      </ul>
+    </section>
+    <section 
+      id="ct-factory"
+      data-domain="2"
+      data-level="advanced"
+    >
+      <h2 class="t">Account Factory</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+      <p>미리 정의된 표준 설정에 따라 새 AWS 계정을 만드는 기능입니다. 수동으로 하면 계정 생성, 조직 등록, 보안 정책, 접근 권한, 로그 수집, 네트워크 구성을 매번 해야 하는데, Account Factory는 표준 템플릿으로 한 번에 프로비저닝하고 새 계정을 조직의 거버넌스 체계에 편입시킵니다.</p>
+      <div class="tbl"><table>
+        <caption>Organizations API와 Account Factory 비교</caption>
+        <thead><tr><th scope="col">항목</th><th scope="col">Organizations API</th><th scope="col">Account Factory</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">초점</th><td>계정 생성과 조직 관리</td><td>바로 쓸 수 있는 표준화된 계정 환경 구축</td></tr>
+          <tr><th scope="row">결과</th><td>새 Member Account가 만들어지고 조직에 자동 가입됨. Control Tower Landing Zone 설정까지 자동 완료되지는 않음</td><td>내부적으로 <code>CreateAccount</code> API를 활용하고, 기본 설정을 추가로 적용해 수동 설정 없이 사용 가능</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+  </main>
+</div>
+
+</div>
+
+
+<footer>
+  <p><span class="ln">학생이 정리한 비공식 학습 자료입니다.</span><span class="ln">위 내용은 AWS 공식 문서를 바탕으로 합니다.</span></p>
+  <p><span class="ln">마지막 확인일: 2026년 11월 18일.</span><span class="ln">시험 범위와 서비스 내용은 바뀔 수 있으니 <a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank" rel="noopener noreferrer">AWS 공식 시험 페이지</a>와 공식 문서도 함께 확인하세요.</span></p>
+</footer>
+</body>
+</html>
