@@ -187,7 +187,6 @@ Phase 7에서 도메인별 학습 콘텐츠 필터링 기능을 구현했지만,
 
 또한 검색 결과를 클릭하면 해당 콘텐츠가 속한 도메인이나 Advanced Topics 화면으로 자동 전환되도록 기존 페이지 전환 및 도메인 필터링 기능과 연동했습니다. 이를 통해 검색 기능이 단순히 관련 내용을 찾아 보여주는 역할에 그치지 않고, 사용자가 원하는 학습 콘텐츠로 직접 이동할 수 있는 탐색 기능으로 확장되었습니다. 특히 기존에 HTML의 `data-domain`과 `data-level` 속성으로 관리하던 학습 콘텐츠의 분류 정보를 JavaScript 검색 기능에서도 활용함으로써, 향후 새로운 학습 콘텐츠가 추가되더라도 해당 속성을 지정하면 통합 검색에 자연스럽게 반영될 수 있도록 구현했습니다.
 
-
 ---
 
 ## 3. Main Features
@@ -236,7 +235,6 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 | Amazon S3 | 정적 웹 사이트 파일 저장 및 호스팅 |
 | Amazon CloudFront | 콘텐츠 전송 및 캐싱을 통한 웹 사이트 배포 |
 
-
 ---
 
 ## 5. AWS Deployment
@@ -247,8 +245,7 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 - 정적 웹 사이트 파일 저장
 - HTML, CSS, JavaScript 파일 관리
 - CloudFront의 Origin으로 활용
-- Block Public Access를 활성화하여
-  S3 객체에 대한 직접적인 퍼블릭 접근 차단
+- Block Public Access를 활성화하여 S3 객체에 대한 직접적인 퍼블릭 접근 차단
 - Bucket Policy를 통해 CloudFront OAC의 접근만 허용
 
 ### Amazon CloudFront
@@ -277,7 +274,7 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 - HTML을 활용한 웹 페이지 구조 설계
 - CSS Grid와 Media Query를 활용한 반응형 레이아웃 구현
 - JavaScript를 이용한 검색 기능 구현
-- 코드의 역할에 따라 HTML, CSS, JavaScript를 분리하는 구조의 중요성 이해
+- 코드의 역할에 따라 HTML, JavaScript를 분리하는 구조의 중요성 이해
 
 **AWS Cloud**
 
@@ -285,6 +282,7 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 - Amazon CloudFront의 Origin과 Distribution 구조 이해
 - CDN 캐싱과 Invalidation의 필요성 경험
 - AWS 서비스를 조합하여 웹 콘텐츠를 배포하는 과정 학습
+- CloudFront에 OAC를 적용하여 HTTPS를 통한 접속 경로 형성, S3 객체에 대한 직접 접근 차단
 
 **Problem Solving**
 
@@ -299,7 +297,7 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 프로젝트를 지속적으로 발전시키기 위해 다음과 같은 개선 사항을 고려하고 있습니다.
 
 - 학습 콘텐츠의 지속적인 업데이트
-- 검색 기능의 정확도와 사용성 개선
+- 검색 기능의 사용성 개선
 - 학습 진행 상황을 확인할 수 있는 기능
 - 모바일 환경에서의 사용자 경험 개선
 - 추가적인 JavaScript 기능 구현
