@@ -251,8 +251,7 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 ### Amazon CloudFront
 - S3 버킷을 Origin으로 설정
 - Origin Access Control(OAC)을 적용하여 CloudFront를 통한 안전한 S3 접근 구성
-- 캐시 정책의 Minimum TTL, Default TTL, Maximum TTL 설정
-- 캐싱을 활용한 콘텐츠 전달
+- AWS Edge Location의 캐싱을 활용한 콘텐츠 전달(지연 시간 최소화, 빠른 컨텐츠 전달)
 - 파일 수정 후 Invalidation을 통한 캐시 갱신
 
 ### Deployment Process
@@ -273,7 +272,7 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 
 - HTML을 활용한 웹 페이지 구조 설계
 - CSS Grid와 Media Query를 활용한 반응형 레이아웃 구현
-- JavaScript를 이용한 검색 기능 구현
+- JavaScript를 이용한 검색 기능 및 UI 구현
 - 코드의 역할에 따라 HTML, JavaScript를 분리하는 구조의 중요성 이해
 
 **AWS Cloud**
@@ -282,7 +281,7 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 - Amazon CloudFront의 Origin과 Distribution 구조 이해
 - CDN 캐싱과 Invalidation의 필요성 경험
 - AWS 서비스를 조합하여 웹 콘텐츠를 배포하는 과정 학습
-- CloudFront에 OAC를 적용하여 HTTPS를 통한 접속 경로 형성, S3 객체에 대한 직접 접근 차단
+- CloudFront에 OAC를 적용하여 HTTPS를 통한 접속 경로 형성, S3 객체에 대한 직접 접근 차단Ty
 
 **Problem Solving**
 
@@ -300,7 +299,7 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 - 검색 기능의 사용성 개선
 - 학습 진행 상황을 확인할 수 있는 기능
 - 모바일 환경에서의 사용자 경험 개선
-- 추가적인 JavaScript 기능 구현
+- JavaScript를 통한 추가 기능 구현
 - AWS 서비스를 활용한 배포 및 운영 경험 확장
 
 ---
