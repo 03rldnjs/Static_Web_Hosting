@@ -281,7 +281,8 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 - Amazon CloudFront의 Origin과 Distribution 구조 이해
 - CDN 캐싱과 Invalidation의 필요성 경험
 - AWS 서비스를 조합하여 웹 콘텐츠를 배포하는 과정 학습
-- CloudFront에 OAC를 적용하여 HTTPS를 통한 접속 경로 형성, S3 객체에 대한 직접 접근 차단Ty
+- CloudFront에 OAC를 적용하여 S3 객체에 대한 직접 접근 차단
+- CloudFront의 Viewer Protocol Policy 설정을 통해 HTTP 접속을 HTTPS로 redirect(Redirect HTTP to HTTPS)
 
 **Problem Solving**
 
