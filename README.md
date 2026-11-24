@@ -69,6 +69,7 @@ HTML5 · CSS3 · JavaScript · Font Awesome 6.7.2 · Amazon S3 · Amazon CloudFr
 ```
 Static_Web_Hosting/
 ├── AWS_Certificate_Studynote/   # 사이트 소스와 상세 개발 기록
+└── docs/images/                 # README용 스크린샷
 
 ```
 
