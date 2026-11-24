@@ -1,6 +1,3 @@
-# Static_Web_Hosting
-Host the Static Website using AWS Resources(S3 + CloudFront)
-
 # AWS Study Notes
 
 > AWS CLF-C02(기본)와 SAA-C03(심화) 학습 내용을 정리한 웹 기반 스터디 노트.
@@ -9,7 +6,7 @@ Host the Static Website using AWS Resources(S3 + CloudFront)
 🔗 **Live:** https://d1yafwlyk0bqb2.cloudfront.net
 📅 개발 기간: 2026.11.09 ~ 진행 중 (현재 Phase 8)
 
-<!-- 스크린샷 1: Home 대시보드 (가로 전체 폭) -->
+
 ![Home 대시보드](docs/images/home-dashboard.png)
 
 ---
@@ -29,7 +26,7 @@ Host the Static Website using AWS Resources(S3 + CloudFront)
 | 목차 접기 | 사이드바를 접고 펼쳐 본문에 집중 (aria 속성 적용) |
 | 반응형 | CSS Grid 기반 2단 레이아웃, 모바일 대응 |
 
-<!-- 스크린샷 2, 3: 도메인 학습 화면 / 검색 결과 화면 (나란히) -->
+
 | 도메인 학습 | 통합 검색 |
 | --- | --- |
 | ![도메인 학습 화면](docs/images/study-domain.png) | ![검색 결과 화면](docs/images/search-results.png) |
@@ -44,7 +41,7 @@ flowchart LR
 
 - **S3:** Block Public Access를 켜서 직접 접근을 차단하고, 버킷 정책으로 CloudFront OAC의 요청만 허용
 - **CloudFront:** S3를 Origin으로 사용하고 엣지 캐싱으로 콘텐츠 전달
-- **HTTPS:** Viewer Protocol Policy를 'Redirect HTTP to HTTPS'로 설정
+- **HTTPS:** Viewer Protocol Policy를 `Redirect HTTP to HTTPS`로 설정
 - **배포:** 파일을 S3에 업로드한 뒤 CloudFront Invalidation으로 캐시 갱신 (서울 리전)
 
 ## 기술 스택
@@ -70,7 +67,6 @@ HTML5 · CSS3 · JavaScript · Font Awesome 6.7.2 · Amazon S3 · Amazon CloudFr
 Static_Web_Hosting/
 ├── AWS_Certificate_Studynote/   # 사이트 소스와 상세 개발 기록
 └── docs/images/                 # README용 스크린샷
-
 ```
 
 ## 앞으로의 계획
