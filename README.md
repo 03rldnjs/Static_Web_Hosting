@@ -44,7 +44,7 @@ flowchart LR
 
 - **S3:** Block Public Access를 켜서 직접 접근을 차단하고, 버킷 정책으로 CloudFront OAC의 요청만 허용
 - **CloudFront:** S3를 Origin으로 사용하고 엣지 캐싱으로 콘텐츠 전달
-- **HTTPS:** Viewer Protocol Policy를 `<!-- TODO: Redirect HTTP to HTTPS 또는 HTTPS only -->`로 설정
+- **HTTPS:** Viewer Protocol Policy를 'Redirect HTTP to HTTPS'로 설정
 - **배포:** 파일을 S3에 업로드한 뒤 CloudFront Invalidation으로 캐시 갱신 (서울 리전)
 
 ## 기술 스택
@@ -69,7 +69,7 @@ HTML5 · CSS3 · JavaScript · Font Awesome 6.7.2 · Amazon S3 · Amazon CloudFr
 ```
 Static_Web_Hosting/
 ├── AWS_Certificate_Studynote/   # 사이트 소스와 상세 개발 기록
-└── docs/images/                 # README용 스크린샷
+
 ```
 
 ## 앞으로의 계획
