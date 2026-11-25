@@ -42,7 +42,7 @@ flowchart LR
 - **S3:** Block Public Access를 켜서 직접 접근을 차단하고, 버킷 정책으로 CloudFront OAC의 요청만 허용
 - **CloudFront:** S3를 Origin으로 사용하고 엣지 캐싱으로 콘텐츠 전달
 - **HTTPS:** Viewer Protocol Policy를 `Redirect HTTP to HTTPS`로 설정
-- **배포:** 파일을 S3에 업로드한 뒤 CloudFront Invalidation으로 캐시 갱신 (서울 리전)
+- **배포:** 파일을 S3에 업로드한 뒤 CloudFront Invalidation으로 캐시 갱신 (us-east-1 리전)
 
 ## 기술 스택
 
