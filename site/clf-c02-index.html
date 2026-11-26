@@ -894,6 +894,11 @@ footer p { margin: 0 0 6px; max-width: 60em; }
       <li><a href="#policy" class="d2">IAM Policy와 동작 원리</a></li>
       <li><a href="#boundary" class="adv">Permissions Boundary<span class="nav-adv">심화</span></a></li>
       <li><a href="#iam-compare" class="adv">Boundary, SCP, Resource-based Policy<span class="nav-adv">심화</span></a></li>
+      <li><a href="#sg-nacl" class="adv">Security Group과 NACL 비교<span class="nav-adv">심화</span></a></li>
+    </ul>
+    <h2>AWS 핵심 용어와 개념</h2>
+    <ul>
+      <li><a href="#stateless-core" class="adv">Stateless와 Stateful<span class="nav-adv">심화</span></a></li>
     </ul>
     <h2>AWS 아키텍처 핵심 개념</h2>
     <ul>
@@ -928,7 +933,7 @@ footer p { margin: 0 0 6px; max-width: 60em; }
     <h2>ELB와 Auto Scaling</h2>
     <ul>
       <li><a href="#scale" class="d3">Scale Up과 Scale Out</a></li>
-      <li><a href="#stateless" class="adv">Stateless와 Stateful<span class="nav-adv">심화</span></a></li>
+      <li><a href="#stateless" class="adv">Stateless 구조와 Scale Out<span class="nav-adv">심화</span></a></li>
       <li><a href="#asg" class="d3">Auto Scaling 기본 구조</a></li>
       <li><a href="#asg-health" class="adv">Health Checks, Grace Period<span class="nav-adv">심화</span></a></li>
       <li><a href="#asg-policy" class="adv">Auto Scaling 유형, Policy<span class="nav-adv">심화</span></a></li>
@@ -2213,6 +2218,56 @@ footer p { margin: 0 0 6px; max-width: 60em; }
 </ul>
     </section>
 
+    <p class="group">AWS 핵심 용어와 개념</p>
+
+    <section
+      id="stateless-core"
+      data-domain="3"
+      data-level="advanced"
+    >
+      <h2 class="t">Stateless와 Stateful</h2>
+      <p class="tag adv">심화 내용(SAA-C03 범위)</p>
+
+      <h3 class="s">Stateless vs Stateful</h3>
+      <ul class="pts">
+        <li>
+          Stateless = 무상태: 이전 요청에서 생성된 상태 정보에 의존하지 않고 각 요청을 독립적으로 처리하는 방식
+          <ul>
+            <li>요청마다 필요한 정보를 함께 전달하거나 외부 저장소에서 조회</li>
+            <li>어떤 서버가 요청을 처리하더라도 필요한 정보를 확보할 수 있도록 설계</li>
+            <li>특정 서버에 대한 의존성이 낮아 서버 추가 및 제거가 상대적으로 쉬움</li>
+          </ul>
+        </li>
+        <li>
+          Stateful = 상태 유지: 이전 요청에서 생성된 상태 정보를 보관하고 이후 요청에서 이를 활용하는 방식
+          <ul>
+            <li>서버 메모리나 별도 저장소에 로그인 세션, 사용자 진행 상태 등의 정보를 유지</li>
+            <li>특정 서버에 상태 정보가 저장되어 있다면 다른 서버가 요청을 처리할 때 해당 정보를 이용하지 못할 수 있음</li>
+            <li>상태 공유 및 동기화, 외부 저장소 활용 또는 세션 고정 등의 추가 설계가 필요할 수 있음</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3 class="s">Stateless와 Stateful의 적용 관점</h3>
+      <ul class="pts">
+        <li>
+          애플리케이션 관점
+          <ul>
+            <li>Stateless: 각 요청을 독립적으로 처리하므로 여러 서버에 요청을 분산하기 쉬움</li>
+            <li>Stateful: 이전 요청의 상태를 유지해야 하므로 요청이 동일한 서버로 전달되거나 상태 정보가 공유되어야 할 수 있음</li>
+            <li>웹 애플리케이션의 확장성과 세션 관리 방식을 결정하는 중요한 설계 요소</li>
+          </ul>
+        </li>
+        <li>
+          네트워크 보안 관점
+          <ul>
+            <li>Stateful: 연결 상태를 추적하여 허용된 연결의 응답 트래픽을 자동으로 허용</li>
+            <li>Stateless: 연결 상태를 추적하지 않으므로 인바운드와 아웃바운드 트래픽을 각각 평가</li>
+            <li>AWS의 Security Group은 Stateful, Network ACL은 Stateless 방식으로 동작</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
     <p class="group">AWS 아키텍처 핵심 개념</p>
     <section 
       id="ha"
@@ -2327,7 +2382,7 @@ footer p { margin: 0 0 6px; max-width: 60em; }
       data-domain="3"
       data-level="advanced"
     >
-      <h2 class="t">Stateless와 Stateful</h2>
+      <h2 class="t">Stateless구조와 Scale Out</h2>
       <p class="tag adv">심화 내용(SAA-C03 범위)</p>
 <h3 class="s">Stateless vs Stateful</h3>
 <ul class="pts">
