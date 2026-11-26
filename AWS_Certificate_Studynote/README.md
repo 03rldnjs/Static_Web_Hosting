@@ -3,7 +3,7 @@
 (개발 기간: 2026.11.09 ~ )
 [PAGE URL](https://d1yafwlyk0bqb2.cloudfront.net)
 
-AWS Certified Cloud Practitioner(CLF-C02) 자격증 시험을 준비하며 학습한 내용을 정리한 웹 기반 스터디 노트입니다.
+AWS Certified Cloud Practitioner(CLF-C02)를 중심으로, SAA-C03 수준의 심화 내용까지 정리한 웹 기반 스터디 노트입니다.
 
 단순히 학습 내용을 기록하는 것에서 시작하여, 가독성과 사용 편의성을 개선하고 검색 기능 등을 추가하면서 실제 웹 서비스에 가까운 형태로 발전시킨 개인 프로젝트입니다.
 
@@ -13,14 +13,15 @@ AWS의 기본 개념부터 글로벌 인프라, IAM, EC2, VPC 네트워킹 등 �
 
 ## 1. Project Overview
 
-| 항목 | 내용 |
-|---|---|
-| 프로젝트명 | AWS CLF-C02 Study Notes |
-| 프로젝트 유형 | 개인 학습 및 웹 개발 프로젝트 |
-| 목적 | AWS 자격증 학습 내용의 체계적인 정리 및 복습 |
-| 주요 기술 | HTML, CSS, JavaScript |
-| 아이콘 | Font Awesome 6.7.2 |
-| 배포 환경 | Amazon S3, Amazon CloudFront |
+| 항목      | 내용                                              |
+| ------- | ----------------------------------------------- |
+| 프로젝트명   | AWS Study Notes (CLF-C02 기본 + SAA-C03 심화)       |
+| 프로젝트 유형 | 개인 학습 및 웹 개발 프로젝트                               |
+| 목적      | AWS 자격증 학습 내용의 체계적인 정리 및 복습                     |
+| 주요 기술   | HTML, CSS, JavaScript                           |
+| 아이콘     | Font Awesome 6.7.2                              |
+| 배포 환경   | Amazon S3, Amazon CloudFront                    |
+| 배포 자동화  | GitHub Actions (OIDC 기반 IAM 역할)                 |
 
 ### 주요 목표
 
@@ -29,6 +30,7 @@ AWS의 기본 개념부터 글로벌 인프라, IAM, EC2, VPC 네트워킹 등 �
 - 검색 기능을 통한 원하는 학습 내용의 빠른 탐색
 - HTML, CSS, JavaScript를 활용한 웹 개발 경험 축적
 - AWS S3와 CloudFront를 활용한 정적 웹 사이트 배포 경험 확보
+- GitHub Actions와 OIDC를 활용한 배포 자동화(CI/CD) 구축
 
 ---
 
@@ -178,7 +180,7 @@ Phase 7에서 도메인별 학습 콘텐츠 필터링 기능을 구현했지만,
 - 검색 결과에 학습 주제의 제목뿐만 아니라 소속 도메인과 학습 수준을 함께 표시하도록 구현
 - 검색어가 포함된 본문 일부를 미리보기 형태로 제공하고 전체 검색 결과 개수를 표시하도록 구현
 - 검색 결과가 없는 경우 별도의 안내 메시지를 출력하도록 구성
-- Home 화면에서 검색 결과 클릭 시 해당 콘텐츠의 `data-domain`과 `data-level` 정보를 확인하여 올바른 도메인 또는 Advanced Topics 화면으로 자동 전환되도록 구현
+- Home 화면에서 검색 결과 클릭 시 해당 콘텐츠의 `data-domain`과 `data-level` 정보를 확인하여 선택한 도메인 또는 Advanced Topics 화면으로 자동 전환되도록 구현
 - 기존 Study 페이지에서 검색 결과를 클릭하는 경우에도 동일한 페이지 전환 및 콘텐츠 이동 로직을 적용하여 두 검색 기능의 동작 방식 통일
 - 검색 결과 클릭 또는 `ESC` 키 입력 시 검색어와 검색 결과를 초기화하도록 구현
 - 기존 검색창의 중복된 내부 박스 스타일을 정리하여 Home과 Study 페이지의 검색창 디자인이 일관되도록 개선
@@ -190,6 +192,33 @@ Phase 7에서 도메인별 학습 콘텐츠 필터링 기능을 구현했지만,
 **추가 개선 사항**
 - 고가용성, 내결함성, 내구성을 ELB와 Auto Scaling에서 분리하여 AWS 아키텍처 핵심 개념으로 재분류
 - AWS 서비스 중심의 분류와 일반적인 아키텍처 개념을 구분하여 학습 콘텐츠의 구조 개선
+
+### Infra. Deployment Automation — GitHub Actions 배포 자동화
+
+Phase 8까지는 파일을 수정할 때마다 AWS 콘솔에서 S3에 직접 업로드하고 CloudFront 캐시를 갱신해야 했습니다. 또한 GitHub에는 코드를 복사해서 올려 두는 방식이라, GitHub의 내용과 실제 서비스 중인 파일이 어긋날 수 있었습니다. 업로드 누락이나 캐시 갱신을 잊는 실수 가능성도 있었습니다.
+
+이를 해결하기 위해 사이트 소스를 GitHub로 일원화하고, 배포 과정을 GitHub Actions로 자동화했습니다.
+
+**주요 구현 내용**
+
+- 사이트 소스를 저장소의 `site/` 폴더에 S3와 동일한 구조로 관리
+- `main` 브랜치에 `site/` 변경이 push되면 실행되는 GitHub Actions 워크플로 작성
+- `aws s3 sync --delete`로 S3의 내용을 `site/`와 일치시키고, CloudFront Invalidation으로 캐시 갱신
+- GitHub OIDC를 사용해 임시 자격 증명을 발급받도록 구성하여 장기 액세스 키를 사용하지 않음
+- IAM 역할은 해당 버킷의 목록 조회·업로드·삭제와 해당 배포의 캐시 무효화 권한만 부여
+- 신뢰 정책으로 이 저장소의 `main` 브랜치에서 실행된 워크플로만 역할을 맡을 수 있도록 제한
+- 버킷 이름, 배포 ID, 역할 정보는 GitHub Secrets로 분리
+- 첫 적용 때 `--dryrun`으로 삭제 대상이 없는지 확인한 뒤 실제 배포로 전환
+- `site/` 변경이 없는 push(README 수정 등)에서는 배포가 실행되지 않도록 경로 조건 설정
+
+**트러블슈팅: OIDC 역할 맡기 실패**
+
+- **증상:** `Not authorized to perform sts:AssumeRoleWithWebIdentity` 오류
+- **원인:** 신뢰 정책의 `sub` 조건을 `repo:소유자/저장소:ref:refs/heads/main` 형식으로 작성했으나, GitHub가 실제로 보내는 값에는 소유자와 저장소의 숫자 ID가 포함된 형식이었음
+- **해결:** 워크플로에 임시 디버그 단계를 추가해 실제 토큰의 `sub`, `aud` 값을 출력하고, 그 값으로 신뢰 정책을 수정한 뒤 디버그 단계를 제거
+- **배운 점:** 예시나 문서의 형식을 그대로 믿지 않고, 실제로 전달되는 값을 직접 확인하는 것이 빠른 해결로 이어졌음
+
+이를 통해 파일 수정 후 `git push` 한 번으로 서비스에 반영되며, 배포 이력은 Actions 로그로 남습니다. 이전 커밋으로 되돌려 push하면 이전 버전으로 복구할 수도 있습니다.
 
 ---
 
@@ -238,6 +267,9 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 | Font Awesome | 검색 아이콘 등 시각적 요소 제공 |
 | Amazon S3 | 정적 웹 사이트 파일 저장 및 호스팅 |
 | Amazon CloudFront | 콘텐츠 전송 및 캐싱을 통한 웹 사이트 배포 |
+| GitHub            | 소스 코드 버전 관리                          |
+| GitHub Actions    | S3 동기화와 CloudFront 캐시 무효화 자동화(CI/CD) |
+| AWS IAM           | OIDC 기반 임시 자격 증명과 최소 권한 역할           |
 
 ---
 
@@ -256,15 +288,28 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 - S3 버킷을 Origin으로 설정
 - Origin Access Control(OAC)을 적용하여 CloudFront를 통한 안전한 S3 접근 구성
 - AWS Edge Location의 캐싱을 활용한 콘텐츠 전달(지연 시간 최소화, 빠른 컨텐츠 전달)
-- 파일 수정 후 Invalidation을 통한 캐시 갱신
+- 배포 시 Invalidation을 자동 실행하여 캐시 갱신
 
 ### Deployment Process
 
-1. 프로젝트 파일을 Amazon S3 버킷에 업로드
-2. CloudFront 배포의 Origin을 S3 버킷으로 설정
-3. CloudFront를 통해 웹 사이트에 접근
-4. 코드 수정 후 변경된 파일을 S3에 재업로드
-5. CloudFront Invalidation을 실행하여 기존 캐시 갱신
+**현재 방식 (자동 배포)**
+
+1. 로컬 저장소의 `site/` 폴더에서 파일 수정
+2. `git add site` → `git commit` → `git push`
+3. GitHub Actions가 OIDC로 IAM 역할을 맡아 임시 자격 증명 발급
+4. `aws s3 sync --delete`로 S3와 `site/` 내용 동기화
+5. CloudFront Invalidation으로 캐시 갱신
+6. 수 분 내 사이트에 반영
+
+**초기 방식 (Phase 1~8)**
+
+콘솔에서 S3에 파일을 직접 업로드하고 CloudFront Invalidation을 수동으로 실행했습니다. 이 방식의 한계(GitHub와 S3 불일치, 작업 누락 가능성)를 해결하기 위해 **자동화로 전환**했습니다.
+
+### GitHub Actions & IAM
+
+- GitHub OIDC 공급자를 IAM에 등록하고, 이 저장소의 `main` 브랜치에서 실행된 워크플로만 맡을 수 있는 역할 구성
+- 장기 액세스 키 없이 실행 시마다 임시 자격 증명 사용
+- 역할 권한: 해당 버킷의 `ListBucket`, `PutObject`, `DeleteObject`와 해당 배포의 `CreateInvalidation`
 
 ---
 
@@ -285,8 +330,16 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 - Amazon CloudFront의 Origin과 Distribution 구조 이해
 - CDN 캐싱과 Invalidation의 필요성 경험
 - AWS 서비스를 조합하여 웹 콘텐츠를 배포하는 과정 학습
-- CloudFront에 OAC를 적용하여 S3 객체에 대한 직접 접근 차단
-- CloudFront의 Viewer Protocol Policy 설정을 통해 HTTP 접속을 HTTPS로 redirect(Redirect HTTP to HTTPS)
+- S3 Block Public Access와 버킷 정책, CloudFront OAC를 조합하여 CloudFront를 거치는 요청만 S3에 접근하도록 구성
+- CloudFront의 Viewer Protocol Policy로 HTTP 요청을 HTTPS로 리디렉션
+
+**DevOps / CI·CD**
+
+- Git의 기본 작업 흐름(clone, pull, add, commit, push) 습득
+- GitHub Actions 워크플로 작성과 Actions 로그를 통한 문제 추적
+- GitHub OIDC와 IAM 역할을 이용한 장기 키 없는 인증 구성
+- 최소 권한 원칙에 따른 IAM 정책 설계
+- 배포 전 `--dryrun`으로 영향 범위를 확인하는 습관
 
 **Problem Solving**
 
@@ -298,14 +351,10 @@ JavaScript를 활용하여 학습 노트의 내용을 검색할 수 있습니다
 
 ## 7. Future Improvements
 
-프로젝트를 지속적으로 발전시키기 위해 다음과 같은 개선 사항을 고려하고 있습니다.
-
-- 학습 콘텐츠의 지속적인 업데이트
-- 검색 기능의 사용성 개선
+- Terraform으로 S3, CloudFront, OAC, IAM 역할 구성을 코드화
 - 학습 진행 상황을 확인할 수 있는 기능
 - 모바일 환경에서의 사용자 경험 개선
-- JavaScript를 통한 추가 기능 구현
-- AWS 서비스를 활용한 배포 및 운영 경험 확장
+- 학습 콘텐츠의 지속적인 업데이트
 
 ---
 
