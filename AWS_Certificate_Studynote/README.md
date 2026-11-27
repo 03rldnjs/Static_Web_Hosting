@@ -206,7 +206,7 @@ Phase 7에서 도메인별 학습 콘텐츠 필터링 기능을 구현했지만,
   - 사이드바 목차와 본문 콘텐츠의 구조를 일치시켜 탐색 편의성 개선
   - 기존 검색 및 도메인별 필터링 기능과의 호환성 유지
 
-### Infra. Deployment Automation — GitHub Actions 배포 자동화
+### INFRA. Deployment Automation — GitHub Actions 배포 자동화
 
 Phase 8까지는 파일을 수정할 때마다 AWS 콘솔에서 S3에 직접 업로드하고 CloudFront 캐시를 갱신해야 했습니다. 또한 GitHub에는 코드를 복사해서 올려 두는 방식이라, GitHub의 내용과 실제 서비스 중인 파일이 어긋날 수 있었습니다. 업로드 누락이나 캐시 갱신을 잊는 실수 가능성도 있었습니다.
 
@@ -224,7 +224,7 @@ Phase 8까지는 파일을 수정할 때마다 AWS 콘솔에서 S3에 직접 업
 - 첫 적용 때 `--dryrun`으로 삭제 대상이 없는지 확인한 뒤 실제 배포로 전환
 - `site/` 변경이 없는 push(README 수정 등)에서는 배포가 실행되지 않도록 경로 조건 설정
 
-**트러블슈팅: OIDC 역할 맡기 실패**
+**Trouble Shooting: OIDC 역할 맡기 실패**
 
 - **증상:** `Not authorized to perform sts:AssumeRoleWithWebIdentity` 오류
 - **원인:** 신뢰 정책의 `sub` 조건을 `repo:소유자/저장소:ref:refs/heads/main` 형식으로 작성했으나, GitHub가 실제로 보내는 값에는 소유자와 저장소의 숫자 ID가 포함된 형식이었음
