@@ -1,5 +1,6 @@
 
 # AWS Certificate Study Notes
+> 이 폴더의 코드는 각 Phase 시점의 스냅샷이며, 실제 서비스 중인 최신 코드는 `site/`에 있습니다.
 (개발 기간: 2026.11.09 ~ )
 [PAGE URL](https://d1yafwlyk0bqb2.cloudfront.net)
 
